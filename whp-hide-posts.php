@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Wordpress Hide Posts
- * Description: Hides posts on home page, categories, search, tags page and authors page
+ * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommere products
  * Author:      Martin Jankov
- * Author URI:  https://mk.linkedin.com/in/martinjankov
- * Version:     0.0.1
+ * Author URI:  https://www.martincv.com
+ * Version:     0.4.2
  * Text Domain: whp
  *
  * Wordpress Hide Posts is free software: you can redistribute it and/or modify
@@ -22,9 +22,9 @@
  *
  * @package    wordpress-hide-posts
  * @author     Martin Jankov
- * @since      0.0.1
+ * @since      0.4.2
  * @license    GPL-3.0+
- * @copyright  Copyright (c) 2017, Martin Jankov
+ * @copyright  Copyright (c) 2019, Martin Jankov
  */
 
 // Exit if accessed directly.
@@ -48,7 +48,7 @@ final class WordpressHidePosts {
 	 *
 	 * @var string
 	 */
-	private $_version = '0.0.1';
+	private $_version = '0.4.2';
 
 	/**
 	 * Initiate plugin
@@ -63,7 +63,8 @@ final class WordpressHidePosts {
 			self::$_instance->constants();
 			self::$_instance->includes();
 
-			add_action( 'plugins_loaded', array( self::$_instance, 'objects' ), 10 );
+			add_action( 'plugins_loaded', [ self::$_instance, 'objects' ], 10 );
+			add_action( 'plugins_loaded', [ self::$_instance, 'load_textdomain'], 10 );
 		}
 		return self::$_instance;
 	}
@@ -74,11 +75,15 @@ final class WordpressHidePosts {
 	 * @return void
 	 */
 	private function includes() {
+		// Includes.
+		require_once WHP_PLUGIN_DIR . 'includes/helpers.php';
+		
 		// Classes.
 		require_once WHP_PLUGIN_DIR . 'classes/WHP_Post_Hide.php';
 
 		// Admin/Dashboard only includes.
 		if ( is_admin() ) {
+			require_once WHP_PLUGIN_DIR . 'classes/admin/WHP_Admin_Dashboard.php';
 			require_once WHP_PLUGIN_DIR . 'classes/admin/WHP_Post_Hide_Metabox.php';
 		}
 	}
@@ -121,18 +126,16 @@ final class WordpressHidePosts {
 
 		// Init classes if is Admin/Dashboard.
 		if( is_admin() ) {
+			new WHP_Admin_Dashboard;
 			new WHP_Post_Hide_Metabox;
 		}
 	}
+
+	public function load_textdomain() {
+		load_plugin_textdomain( 'whp', false, basename( dirname( __FILE__ ) ) . '/languages' );
+	}
 }
 
-/**
- * Use this function as global in all other classes and/or files
- *
- * You can do whp()->object1->some_function()
- * You can do whp()->object2->some_function()
- *
- */
 function whp() {
 	return WordpressHidePosts::instance();
 }

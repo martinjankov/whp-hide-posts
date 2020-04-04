@@ -20,6 +20,21 @@ class WHP_Post_Hide {
 	 */
 	public function __construct() {
 		add_action( 'pre_get_posts', array( $this, 'exclude_posts') );
+		add_action( 'parse_query', array( $this, 'parse_query') );
+	}
+
+	/**
+	 * A workaround for the is_front_page() check inside pre_get_posts and later hooks.
+	 *
+	 * Based on the patch from @mattonomics in #27015
+	 *
+	 * @see http://wordpress.stackexchange.com/a/188320/26350
+	 */
+	public function parse_query( $query ) {
+		if( is_null( $query->queried_object ) && $query->get( 'page_id' ) )	{
+			$query->queried_object    = get_post( $query->get( 'page_id' ) );
+			$query->queried_object_id = (int) $query->get( 'page_id' );
+		}
 	}
 
 	/**
@@ -30,12 +45,14 @@ class WHP_Post_Hide {
 	 * @return void
 	 */
 	public function exclude_posts( $query ) {
-		global $post;
-
 		if ( ! is_admin() ) {
 			// Hide on homepage.
-			if ( is_front_page() || is_home() ) {
+			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			} else if ( is_home() ) {
+				// Hide on static blog page.
+				$query->set( 'meta_key', '_whp_hide_on_blog_page' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
@@ -62,6 +79,26 @@ class WHP_Post_Hide {
 				$query->set( 'meta_key', '_whp_hide_on_authors' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
+
+			// Hide in RSS Feed.
+			if ( is_feed() ) {
+				$query->set( 'meta_key', '_whp_hide_in_rss_feed' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
+			// Hide in Store.
+			if ( whp_wc_exists() && is_shop() ) {
+				$query->set( 'meta_key', '_whp_hide_on_store' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
+			// Hide on Product categories.
+			if ( whp_wc_exists() && is_product_category() ) {
+				$query->set( 'meta_key', '_whp_hide_on_product_category' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
 		}
 	}
+
+	
 }
