@@ -44,6 +44,12 @@ global $post;
 		</label>
 	</p>
 	<p>
+		<label for='whp_hide_in_rest_api'>
+			<input type='checkbox' name="whp_hide_in_rest_api" value='1' <?php //checked( $whp_hide_in_rest_api, 1 ); ?> id='whp_hide_in_rest_api'>
+			<?php //_e( 'Hide in REST API', 'whp' ); ?>
+		</label>
+	</p>
+	<p>
 		<label for='whp_hide_on_blog_page'>
 			<input type='checkbox' name="whp_hide_on_blog_page" value='1' <?php checked( $whp_hide_on_blog_page, 1 ); ?> id='whp_hide_on_blog_page'>
 			<?php _e( 'Hide on blog page', 'whp' ); ?>
