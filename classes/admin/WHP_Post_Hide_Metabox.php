@@ -106,6 +106,7 @@ class WHP_Post_Hide_Metabox {
 		$whp_data['_whp_hide_on_tags'] = ! empty( $_POST['whp_hide_on_tags'] ) ? true : false;
 		$whp_data['_whp_hide_on_authors'] = ! empty( $_POST['whp_hide_on_authors'] ) ? true : false;
 		$whp_data['_whp_hide_in_rss_feed'] = ! empty( $_POST['whp_hide_in_rss_feed'] ) ? true : false;
+		$whp_data['_whp_hide_in_rest_api'] = ! empty( $_POST['whp_hide_in_rest_api'] ) ? true : false;
 		$whp_data['_whp_hide_on_blog_page'] = ! empty( $_POST['whp_hide_on_blog_page'] ) ? true : false;
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {

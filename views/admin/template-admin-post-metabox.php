@@ -46,7 +46,7 @@ global $post;
 	<p>
 		<label for='whp_hide_in_rest_api'>
 			<input type='checkbox' name="whp_hide_in_rest_api" value='1' <?php //checked( $whp_hide_in_rest_api, 1 ); ?> id='whp_hide_in_rest_api'>
-			<?php //_e( 'Hide in REST API', 'whp' ); ?>
+			<?php _e( 'Hide in REST API', 'whp' ); ?>
 		</label>
 	</p>
 	<p>
