@@ -1,13 +1,13 @@
 === Wordpress Hide Posts ===
-Contributors: martin7ba
+Contributors: martin7ba,conschneider
 Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed
 Requires at least: 4.0
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.4.2
+Stable tag: 0.4.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
- 
+
 This plugin allows you to hide any posts on the home page, category page, search page, tags page, authors page and RSS Feed
 Also you can hide Woocommerce products from Shop page as well as from Product category pages.
 
@@ -16,12 +16,18 @@ To enable it for Woocommerce products or any other Custom Post type go to Settin
 When you create new or edit post, you can choose on which archive page to hide that post as well as on the home page.
 
 == Installation ==
- 
+
 1. Upload the `whp-hide-posts` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Enable Hide post functionality for additional post types by going to Settings -> Hide Posts
 
 == Changelog ==
+
+= 0.4.3 =
+*Release Date - 06 April 2020*
+
+* Added option to hide posts from REST API all posts query: /wp-json/wp/v2/posts/
+Note: Single post entry in REST API remains available /wp-json/wp/v2/posts/[post_id]
 
 = 0.4.2 =
 *Release Date - 13 February 2020*
