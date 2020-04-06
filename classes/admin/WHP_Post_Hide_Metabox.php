@@ -57,7 +57,7 @@ class WHP_Post_Hide_Metabox {
 		$whp_hide_on_tags  = get_post_meta( $post->ID, "_whp_hide_on_tags", true );
 		$whp_hide_on_authors  = get_post_meta( $post->ID, "_whp_hide_on_authors", true );
 		$whp_hide_in_rss_feed  = get_post_meta( $post->ID, "_whp_hide_in_rss_feed", true );
-		$whp_hide_in_rss_REST_API  = get_post_meta( $post->ID, "_whp_hide_in_rest_api", true );
+		$whp_hide_in_rest_api  = get_post_meta( $post->ID, "_whp_hide_in_rest_api", true );
 		$whp_hide_on_blog_page  = get_post_meta( $post->ID, "_whp_hide_on_blog_page", true );
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {
