@@ -55,7 +55,6 @@ class WHP_Post_Hide {
 				$query->set( 'meta_key', '_whp_hide_on_blog_page' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
-
 			// Hide on Categories.
 			if ( is_category() ) {
 				$query->set( 'meta_key', '_whp_hide_on_categories' );
@@ -83,6 +82,11 @@ class WHP_Post_Hide {
 			// Hide in RSS Feed.
 			if ( is_feed() ) {
 				$query->set( 'meta_key', '_whp_hide_in_rss_feed' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+			// Hide in REST API
+			if (( defined( 'REST_REQUEST' ) && REST_REQUEST )) {
+				$query->set( 'meta_key', '_whp_hide_in_rest_api' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
