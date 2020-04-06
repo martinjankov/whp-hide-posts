@@ -4,7 +4,7 @@
  * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommere products
  * Author:      Martin Jankov
  * Author URI:  https://www.martincv.com
- * Version:     0.4.2
+ * Version:     0.4.3
  * Text Domain: whp
  *
  * Wordpress Hide Posts is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  *
  * @package    wordpress-hide-posts
  * @author     Martin Jankov
- * @since      0.4.2
+ * @since      0.4.3
  * @license    GPL-3.0+
  * @copyright  Copyright (c) 2019, Martin Jankov
  */
@@ -48,7 +48,7 @@ final class WordpressHidePosts {
 	 *
 	 * @var string
 	 */
-	private $_version = '0.4.2';
+	private $_version = '0.4.3';
 
 	/**
 	 * Initiate plugin
