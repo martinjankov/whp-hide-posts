@@ -38,15 +38,15 @@ global $post;
 		</label>
 	</p>
 	<p>
-		<label for='whp_hide_in_rss_feed'>
-			<input type='checkbox' name="whp_hide_in_rss_feed" value='1' <?php checked( $whp_hide_in_rss_feed, 1 ); ?> id='whp_hide_in_rss_feed'>
-			<?php _e( 'Hide in RSS Feed', 'whp' ); ?>
+		<label for='whp_hide_on_date'>
+			<input type='checkbox' name="whp_hide_on_date" value='1' <?php checked( $whp_hide_on_date, 1 ); ?> id='whp_hide_on_date'>
+			<?php _e( 'Hide on date archive', 'whp' ); ?>
 		</label>
 	</p>
 	<p>
-		<label for='whp_hide_in_rest_api'>
-			<input type='checkbox' name="whp_hide_in_rest_api" value='1' <?php checked( $whp_hide_in_rest_api, 1 ); ?> id='whp_hide_in_rest_api'>
-			<?php _e( 'Hide in REST API', 'whp' ); ?>
+		<label for='whp_hide_in_rss_feed'>
+			<input type='checkbox' name="whp_hide_in_rss_feed" value='1' <?php checked( $whp_hide_in_rss_feed, 1 ); ?> id='whp_hide_in_rss_feed'>
+			<?php _e( 'Hide in RSS Feed', 'whp' ); ?>
 		</label>
 	</p>
 	<p>
@@ -54,6 +54,12 @@ global $post;
 			<input type='checkbox' name="whp_hide_on_blog_page" value='1' <?php checked( $whp_hide_on_blog_page, 1 ); ?> id='whp_hide_on_blog_page'>
 			<?php _e( 'Hide on blog page', 'whp' ); ?>
 			<em><?php _e( '(The POSTS PAGE that is selected in Settings -> Reading)', 'whp' ); ?></em>
+		</label>
+	</p>
+	<p>
+		<label for='whp_hide_on_post_navigation'>
+			<input type='checkbox' name="whp_hide_on_post_navigation" value='1' <?php checked( $whp_hide_on_post_navigation, 1 ); ?> id='whp_hide_on_post_navigation'>
+			<?php _e( 'Hide from post navigation', 'whp' ); ?>
 		</label>
 	</p>
 	<?php if ( whp_wc_exists() && whp_admin_wc_product() ) : ?>

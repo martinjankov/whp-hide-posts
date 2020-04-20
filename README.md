@@ -4,7 +4,7 @@ Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rs
 Requires at least: 4.0
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.4.3
+Stable tag: 0.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,6 +15,9 @@ To enable it for Woocommerce products or any other Custom Post type go to Settin
 
 When you create new or edit post, you can choose on which archive page to hide that post as well as on the home page.
 
+NOTE: The option to hide post from REST API added in version 0.4.3 is now removed in version 0.5 due to conflict with Guttenberg save / update post funcionality.
+It will stay removed until a permanent fix is found for this issue.
+
 == Installation ==
 
 1. Upload the `whp-hide-posts` folder to the `/wp-content/plugins/` directory
@@ -22,6 +25,17 @@ When you create new or edit post, you can choose on which archive page to hide t
 3. Enable Hide post functionality for additional post types by going to Settings -> Hide Posts
 
 == Changelog ==
+
+= 0.5.0 =
+*Release Date - 17 April 2020*
+
+* Removed option to hide post from REST API added in version 0.4.3 due to conflict with Guttenberg save / update post.
+The conflict happens because Guttenberg is using the REST API to save post and load additional data the hide post on REST API was causing conficts with the data.
+
+= 0.4.4 =
+*Release Date - 14 April 2020*
+
+* Added option to hide post on date archive page
 
 = 0.4.3 =
 *Release Date - 06 April 2020*

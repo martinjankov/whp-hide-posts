@@ -21,6 +21,8 @@ class WHP_Post_Hide {
 	public function __construct() {
 		add_action( 'pre_get_posts', array( $this, 'exclude_posts') );
 		add_action( 'parse_query', array( $this, 'parse_query') );
+		add_filter( 'get_next_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
+		add_filter( 'get_previous_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
 	}
 
 	/**
@@ -79,14 +81,9 @@ class WHP_Post_Hide {
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
-			// Hide in RSS Feed.
-			if ( is_feed() ) {
-				$query->set( 'meta_key', '_whp_hide_in_rss_feed' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-			// Hide in REST API
-			if (( defined( 'REST_REQUEST' ) && REST_REQUEST )) {
-				$query->set( 'meta_key', '_whp_hide_in_rest_api' );
+			// Hide on Date.
+			if ( is_date() ) {
+				$query->set( 'meta_key', '_whp_hide_on_date' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
@@ -104,5 +101,27 @@ class WHP_Post_Hide {
 		}
 	}
 
+	/**
+	 * Hide post from post navigation
+	 *
+	 * @param   string  $where  
+	 *
+	 * @return  string          
+	 */
+	public function hide_from_post_navigation( $where ) {
+		$hidden_on_post_navigation = whp_hidden_posts_ids( 'post', 'post_navigation' );
+
+		if ( empty( $hidden_on_post_navigation ) ) {
+			return $where;
+		}
 	
+		$ids_placeholders = array_fill( 0, count( $hidden_on_post_navigation ), '%d' );
+		$ids_placeholders = implode( ', ', $ids_placeholders );
+		
+		global $wpdb;
+		
+		$where .= $wpdb->prepare( " AND ID NOT IN ( $ids_placeholders )", ...$hidden_on_post_navigation );
+
+		return $where;
+	}
 }

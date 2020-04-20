@@ -57,8 +57,9 @@ class WHP_Post_Hide_Metabox {
 		$whp_hide_on_tags  = get_post_meta( $post->ID, "_whp_hide_on_tags", true );
 		$whp_hide_on_authors  = get_post_meta( $post->ID, "_whp_hide_on_authors", true );
 		$whp_hide_in_rss_feed  = get_post_meta( $post->ID, "_whp_hide_in_rss_feed", true );
-		$whp_hide_in_rest_api  = get_post_meta( $post->ID, "_whp_hide_in_rest_api", true );
 		$whp_hide_on_blog_page  = get_post_meta( $post->ID, "_whp_hide_on_blog_page", true );
+		$whp_hide_on_date  = get_post_meta( $post->ID, "_whp_hide_on_date", true );
+		$whp_hide_on_post_navigation  = get_post_meta( $post->ID, "_whp_hide_on_post_navigation", true );
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {
 			$whp_hide_on_store  = get_post_meta( $post->ID, "_whp_hide_on_store", true );
@@ -106,8 +107,9 @@ class WHP_Post_Hide_Metabox {
 		$whp_data['_whp_hide_on_tags'] = ! empty( $_POST['whp_hide_on_tags'] ) ? true : false;
 		$whp_data['_whp_hide_on_authors'] = ! empty( $_POST['whp_hide_on_authors'] ) ? true : false;
 		$whp_data['_whp_hide_in_rss_feed'] = ! empty( $_POST['whp_hide_in_rss_feed'] ) ? true : false;
-		$whp_data['_whp_hide_in_rest_api'] = ! empty( $_POST['whp_hide_in_rest_api'] ) ? true : false;
 		$whp_data['_whp_hide_on_blog_page'] = ! empty( $_POST['whp_hide_on_blog_page'] ) ? true : false;
+		$whp_data['_whp_hide_on_date'] = ! empty( $_POST['whp_hide_on_date'] ) ? true : false;
+		$whp_data['_whp_hide_on_post_navigation'] = ! empty( $_POST['whp_hide_on_post_navigation'] ) ? true : false;
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {
 			$whp_data['_whp_hide_on_store'] = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;
