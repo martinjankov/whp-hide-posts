@@ -59,7 +59,7 @@ class WHP_Post_Hide {
 	 * @return void
 	 */
 	public function exclude_posts( $query ) {
-		if ( ! is_admin() && 'nav_menu_item' !== $query->get( 'post_type' ) ) {
+		if ( ! is_admin() && 'nav_menu_item' !== $query->get( 'post_type' ) && 'attachment' !== $query->get( 'post_type' ) ) {
 			// Hide on homepage.
 			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
