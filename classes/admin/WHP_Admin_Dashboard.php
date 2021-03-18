@@ -34,6 +34,7 @@ class WHP_Admin_Dashboard {
 	public function settings() {
         $post_types = get_post_types( [ 'public' => true ], 'object' );
         $enabled_post_types = get_option( 'whp_enabled_post_types' );
+        $whp_disable_hidden_on_column = get_option( 'whp_disable_hidden_on_column' );
 
         @include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-dashboard.php';
 	}
@@ -45,5 +46,6 @@ class WHP_Admin_Dashboard {
      */
 	public function register_settings() {
 		register_setting( 'whp-settings-group', 'whp_enabled_post_types' );
+		register_setting( 'whp-settings-group', 'whp_disable_hidden_on_column' );
 	}
 }

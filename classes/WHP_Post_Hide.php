@@ -15,10 +15,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WHP_Post_Hide {
 	/**
-	 * Function: __construct
+	 * Enabled post types
 	 *
+	 * @var array
+	 */
+	private $_enabled_post_types = [];
+
+	/**
+	 * Function: __construct
 	 */
 	public function __construct() {
+		$this->_enabled_post_types = get_option( 'whp_enabled_post_types' );
+
+		if ( empty( $this->_enabled_post_types ) ) {
+			$this->_enabled_post_types = ['post'];
+		}
+
 		add_action( 'pre_get_posts', array( $this, 'exclude_posts') );
 		add_action( 'parse_query', array( $this, 'parse_query') );
 		add_filter( 'get_next_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
@@ -47,7 +59,7 @@ class WHP_Post_Hide {
 	 * @return void
 	 */
 	public function exclude_posts( $query ) {
-		if ( ! is_admin() ) {
+		if ( ! is_admin() && 'nav_menu_item' !== $query->get( 'post_type' ) ) {
 			// Hide on homepage.
 			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
@@ -84,6 +96,12 @@ class WHP_Post_Hide {
 			// Hide on Date.
 			if ( is_date() ) {
 				$query->set( 'meta_key', '_whp_hide_on_date' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
+			// Hide on RSS Feed.
+			if ( is_feed() ) {
+				$query->set( 'meta_key', '_whp_hide_in_rss_feed' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 

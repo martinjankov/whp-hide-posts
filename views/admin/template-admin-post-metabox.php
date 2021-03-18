@@ -8,6 +8,12 @@ global $post;
 ?>
 <div class='whp_hide_posts'>
 	<p>
+		<label for='whp_select_all'>
+			<input type='checkbox' <?php checked( $whp_select_all, 1 ); ?> id='whp_select_all'>
+		 	<strong><?php _e( 'SELECT ALL', 'whp' ); ?></strong>
+		</label>
+	</p>
+	<p>
 		<label for='whp_hide_on_frontpage'>
 			<input type='checkbox' name="whp_hide_on_frontpage" value='1' <?php checked( $whp_hide_on_frontpage, 1 ); ?> id='whp_hide_on_frontpage'>
 		 	<?php _e( 'Hide on frontpage', 'whp' ); ?>

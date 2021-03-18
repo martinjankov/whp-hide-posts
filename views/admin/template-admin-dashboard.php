@@ -23,6 +23,15 @@
             <?php endforeach; ?>
         </div>
 
+        <div>
+            <p>
+                <label for='whp_disable_hidden_on_column'>
+                    <input type='checkbox' name="whp_disable_hidden_on_column" value='1' <?php checked( $whp_disable_hidden_on_column, 1 ); ?> id='whp_disable_hidden_on_column'>
+                    <?php _e( 'Disable hidden on column on posts lists table', 'whp' ); ?>
+                </label>
+            </p>
+        </div>
+
 	    <?php submit_button(); ?>
 	</form>
 </div>

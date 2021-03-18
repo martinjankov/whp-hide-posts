@@ -1,10 +1,10 @@
 === Wordpress Hide Posts ===
-Contributors: martin7ba,conschneider
+Contributors: martin7ba
 Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 0.5.0
+Stable tag: 0.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,6 +25,24 @@ It will stay removed until a permanent fix is found for this issue.
 3. Enable Hide post functionality for additional post types by going to Settings -> Hide Posts
 
 == Changelog ==
+
+= 0.5.3 =
+*Release Date - 15 August 2020*
+
+* Fixed jQuery Migrate Helper warning showing in console
+
+= 0.5.2 =
+*Release Date - 12 August 2020*
+
+* Added option to select all hide options in post metabox
+* Add new column in posts list table that shows on which pages the post is hidden
+* Added option in Settigns -> Hide Posts to disable the showing of the said column
+
+= 0.5.1 =
+*Release Date - 19 May 2020*
+
+* Added option to hide posts default WordPress post navigation
+* Fix for hiding menu items bug
 
 = 0.5.0 =
 *Release Date - 17 April 2020*

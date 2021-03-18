@@ -1,0 +1,18 @@
+.whp_qe_hide_posts .whp_hide_posts {
+    height: 150px;
+    overflow-y: scroll;
+    background: #fff;
+    border: 1px solid #eee;
+    width: 100%;
+    padding: 5px;
+}
+
+.whp_qe_hide_posts .whp_hide_posts p {
+    margin: 0;
+    font-size: 11px;
+    padding: 0 5px;
+}
+
+.whp_qe_hide_posts .whp_hide_posts p:first-child {
+    background: #cecece;
+}
