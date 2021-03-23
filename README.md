@@ -2,9 +2,9 @@
 Contributors: martin7ba
 Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed
 Requires at least: 4.0
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 0.5.3
+Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,6 +25,14 @@ It will stay removed until a permanent fix is found for this issue.
 3. Enable Hide post functionality for additional post types by going to Settings -> Hide Posts
 
 == Changelog ==
+
+= 1.0.0 =
+*Release Date - 23 March 2021*
+
+* Code base optimized and refactored
+* Added option to hide CPT on their own archive page
+* Added option to hide any post type on any taxonomy or custom taxonomy
+* Added option to hide posts on the default WordPress recent posts widget
 
 = 0.5.3 =
 *Release Date - 15 August 2020*
