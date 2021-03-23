@@ -28,7 +28,7 @@ if ( ! function_exists( 'whp_admin_wc_product' ) ) {
 if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
     function whp_hidden_posts_ids( $post_type = 'post', $from = 'all' ) {
         $key = 'whp_' . $post_type . '_' . $from;
-        
+
         $hidden_posts = wp_cache_get( $key );
 
         if ( $hidden_posts ) {
@@ -68,6 +68,18 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
                             ),
                             array(
                                 'key' => '_whp_hide_on_post_navigation',
+                                'compare' => 'EXISTS'
+                            ),
+                            array(
+                                'key' => '_whp_hide_on_recent_posts',
+                                'compare' => 'EXISTS'
+                            ),
+                            array(
+                                'key' => '_whp_hide_on_cpt_archive',
+                                'compare' => 'EXISTS'
+                            ),
+                            array(
+                                'key' => '_whp_hide_on_cpt_tax',
                                 'compare' => 'EXISTS'
                             )
                         );
@@ -128,6 +140,26 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
                             )
                         );
                         break;
+            case 'recent_posts': $meta_query = array(
+                            array(
+                                'key' => '_whp_hide_on_recent_posts',
+                                'compare' => 'EXISTS'
+                            )
+                        );
+                        break;
+            case 'cpt_archive': $meta_query = array(
+                            array(
+                                'key' => '_whp_hide_on_cpt_archive',
+                                'compare' => 'EXISTS'
+                            )
+                        );
+            case 'cpt_tax': $meta_query = array(
+                            array(
+                                'key' => '_whp_hide_on_cpt_tax',
+                                'compare' => 'EXISTS'
+                            )
+                        );
+                        break;
             default: return [];
         }
 
@@ -139,11 +171,63 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
             'meta_query' => $meta_query
         ) );
 
-        
+
         $hidden_posts = $hidden_posts->posts;
 
         wp_cache_set( $key, $hidden_posts, 'whp' );
 
         return $hidden_posts;
+    }
+}
+
+/**
+ * Get post types that have the WHP funcionality enabled
+ *
+ * @return  array
+ */
+if ( ! function_exists( 'whp_get_enabled_post_types' ) ) {
+    function whp_get_enabled_post_types() {
+        $key = 'whp_pt';
+
+        $post_types = wp_cache_get( $key );
+
+        if ( $post_types ) {
+            return $post_types;
+        }
+
+        $post_types = [ 'post' ];
+        $enabled_post_types = get_option( 'whp_enabled_post_types' );
+
+        if ( is_array( $enabled_post_types ) ) {
+            $post_types = array_merge( $post_types, $enabled_post_types );
+        }
+
+        wp_cache_set( $key, $post_types, 'data' );
+
+        return $post_types;
+    }
+}
+
+/**
+ * Check if post type is custom post type
+ */
+if ( ! function_exists( 'whp_is_custom_post_type' ) ) {
+    function whp_is_custom_post_type( $post = NULL ) {
+        $all_custom_post_types = get_post_types( array ( '_builtin' => FALSE ) );
+
+        // there are no custom post types
+        if ( empty ( $all_custom_post_types ) ) {
+            return false;
+        }
+
+        $custom_types      = array_keys( $all_custom_post_types );
+        $current_post_type = get_post_type( $post );
+
+        // could not detect current type
+        if ( ! $current_post_type ) {
+            return false;
+        }
+
+        return in_array( $current_post_type, $custom_types );
     }
 }

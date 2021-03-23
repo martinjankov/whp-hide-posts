@@ -5,6 +5,8 @@
  * @package wordpress-hide-posts
  */
 global $post;
+$taxonomies = get_object_taxonomies( $post );
+
 ?>
 <div class='whp_hide_posts'>
 	<p>
@@ -43,6 +45,14 @@ global $post;
 			<?php _e( 'Hide on authors page', 'whp' ); ?>
 		</label>
 	</p>
+    <?php if ( whp_is_custom_post_type( $post ) ): ?>
+        <p>
+            <label for='whp_hide_on_cpt_archive'>
+                <input type='checkbox' name="whp_hide_on_cpt_archive" value='1' <?php checked( $whp_hide_on_cpt_archive, 1 ); ?> id='whp_hide_on_cpt_archive'>
+                <?php _e( 'Hide on CPT archive page', 'whp' ); ?>
+            </label>
+        </p>
+    <?php endif; ?>
 	<p>
 		<label for='whp_hide_on_date'>
 			<input type='checkbox' name="whp_hide_on_date" value='1' <?php checked( $whp_hide_on_date, 1 ); ?> id='whp_hide_on_date'>
@@ -68,6 +78,12 @@ global $post;
 			<?php _e( 'Hide from post navigation', 'whp' ); ?>
 		</label>
 	</p>
+	<p>
+		<label for='whp_hide_on_recent_posts'>
+			<input type='checkbox' name="whp_hide_on_recent_posts" value='1' <?php checked( $whp_hide_on_recent_posts, 1 ); ?> id='whp_hide_on_recent_posts'>
+			<?php _e( 'Hide from recent posts widget', 'whp' ); ?>
+		</label>
+	</p>
 	<?php if ( whp_wc_exists() && whp_admin_wc_product() ) : ?>
 		<h4><?php _e( 'Woocommerce options', 'whp' ); ?></h4>
 		<p>
@@ -83,4 +99,17 @@ global $post;
 			</label>
 		</p>
 	<?php endif; ?>
+    <?php if ( ! empty( $taxonomies ) ): ?>
+        <p>
+            <label for='whp_hide_on_cpt_tax'>
+                <!-- <input type='checkbox' name="whp_hide_on_cpt_tax" value='1' <?php //checked( $whp_hide_on_cpt_tax, 1 ); ?> id='whp_hide_on_cpt_tax'> -->
+                <?php _e( 'Hide on tax:', 'whp' ); ?>
+                <select name="whp_hide_on_cpt_tax[]" id="whp_hide_on_cpt_tax" multiple>
+                    <?php foreach ( $taxonomies as $tax ): ?>
+                        <option value="<?php echo $tax; ?>" <?php is_array( $whp_hide_on_cpt_tax ) && selected( in_array( $tax, $whp_hide_on_cpt_tax ), 1 ) ?>><?php echo ucfirst( $tax ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        </p>
+    <?php endif; ?>
 </div>

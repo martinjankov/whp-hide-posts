@@ -4,7 +4,7 @@
  * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommere products
  * Author:      MartinCV
  * Author URI:  https://www.martincv.com
- * Version:     0.5.3
+ * Version:     1.0.0
  * Text Domain: whp
  *
  * Wordpress Hide Posts is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
  * @author     MartinCV
  * @since      0.0.1
  * @license    GPL-3.0+
- * @copyright  Copyright (c) 2020, MartinCV
+ * @copyright  Copyright (c) 2021, MartinCV
  */
 
 // Exit if accessed directly.
@@ -33,112 +33,97 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WordpressHidePosts class
+ * Main class
  */
 final class WordpressHidePosts {
-	/**
-	 * Holds current plugin instance
-	 *
-	 * @var WordpressHidePosts instance
-	 */
+    /**
+     * Instance of the plugin
+     *
+     * @var WordpressHidePosts
+     */
 	private static $_instance;
 
-	/**
-	 * Current plugin version
-	 *
-	 * @var string
-	 */
-	private $_version = '0.5.3';
+    /**
+     * Plugin version
+     *
+     * @var string
+     */
+	private $_version = '1.0.0';
 
-	/**
-	 * Initiate plugin
-	 *
-	 * @return Class instance WordpressHidePosts instance
-	 */
 	public static function instance() {
-
 		if ( ! isset( self::$_instance ) && ! ( self::$_instance instanceof WordpressHidePosts ) ) {
-
 			self::$_instance = new WordpressHidePosts;
-			self::$_instance->constants();
+            self::$_instance->constants();
 			self::$_instance->includes();
 
-			add_action( 'plugins_loaded', [ self::$_instance, 'objects' ], 10 );
-			add_action( 'plugins_loaded', [ self::$_instance, 'load_textdomain'], 10 );
-		}
+            add_action( 'plugins_loaded', [ self::$_instance, 'objects' ] );
+            add_action( 'plugins_loaded', [ self::$_instance, 'load_textdomain' ] );
+        }
+
 		return self::$_instance;
 	}
 
-	/**
-	 * Add required classes
-	 *
-	 * @return void
-	 */
+    /**
+     * 3rd party includes
+     *
+     * @return  void
+     */
 	private function includes() {
-		// Includes.
-		require_once WHP_PLUGIN_DIR . 'includes/helpers.php';
-		
-		// Classes.
-		require_once WHP_PLUGIN_DIR . 'classes/WHP_Post_Hide.php';
-
-		// Admin/Dashboard only includes.
-		if ( is_admin() ) {
-			require_once WHP_PLUGIN_DIR . 'classes/admin/WHP_Admin_Dashboard.php';
-			require_once WHP_PLUGIN_DIR . 'classes/admin/WHP_Post_Hide_Metabox.php';
-		}
+		require_once WHP_PLUGIN_DIR . 'inc/core/autoloader.php';
+		require_once WHP_PLUGIN_DIR . 'inc/core/helpers.php';
 	}
 
-	/**
-	 * Define global constants
-	 *
-	 * @return void
-	 */
+    /**
+     * Define plugin constants
+     *
+     * @return  void
+     */
 	private function constants() {
-		// Plugin version.
+		// Plugin version
 		if ( ! defined( 'WHP_VERSION' ) ) {
 			define( 'WHP_VERSION', $this->_version );
 		}
 
-		// Plugin Folder Path.
+		// Plugin Folder Path
 		if ( ! defined( 'WHP_PLUGIN_DIR' ) ) {
-			define( 'WHP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+			define( 'WHP_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		}
 
-		// Plugin Folder URL.
+		// Plugin Folder URL
 		if ( ! defined( 'WHP_PLUGIN_URL' ) ) {
-			define( 'WHP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+			define( 'WHP_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		}
 
-		// Plugin Root File.
+		// Plugin Root File
 		if ( ! defined( 'WHP_PLUGIN_FILE' ) ) {
 			define( 'WHP_PLUGIN_FILE', __FILE__ );
 		}
 	}
 
-	/**
-	 * Instantiate class objects required in the plugin
-	 *
-	 * @return void
-	 */
+    /**
+     * Initialize classes / objects here
+     *
+     * @return  void
+     */
 	public function objects() {
 		// Global objects.
-		if ( ! is_admin() ) {
-			new WHP_Post_Hide;
-		}
+        \MartinCV\WHP\Post_Hide::get_instance();
 
 		// Init classes if is Admin/Dashboard.
-		if( is_admin() ) {
-			new WHP_Admin_Dashboard;
-			new WHP_Post_Hide_Metabox;
+		if ( is_admin() ) {
+			\MartinCV\WHP\Admin\Admin_Dashboard::get_instance();
+			\MartinCV\WHP\Admin\Post_Hide_Metabox::get_instance();
 		}
 	}
 
-	public function load_textdomain() {
+    /**
+     * Register textdomain
+     *
+     * @return  void
+     */
+    public function load_textdomain() {
 		load_plugin_textdomain( 'whp', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 }
 
-function whp() {
-	return WordpressHidePosts::instance();
-}
-whp();
+WordpressHidePosts::instance();

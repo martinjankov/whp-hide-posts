@@ -1,11 +1,15 @@
 <?php
+namespace MartinCV\WHP\Admin;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WHP_Admin_Dashboard {
-	public function __construct() {
+class Admin_Dashboard {
+    use \MartinCV\WHP\Traits\Singleton;
+
+	private function initialize() {
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
 		add_action( 'admin_menu', [ $this, 'menu' ] );
 	}
@@ -13,7 +17,7 @@ class WHP_Admin_Dashboard {
     /**
      * Register new submenu and Settings
      *
-     * @return  void  
+     * @return  void
      */
 	public function menu() {
 		add_submenu_page(
@@ -29,7 +33,7 @@ class WHP_Admin_Dashboard {
     /**
      * Show the settings form with options
      *
-     * @return  void  
+     * @return  void
      */
 	public function settings() {
         $post_types = get_post_types( [ 'public' => true ], 'object' );
@@ -42,7 +46,7 @@ class WHP_Admin_Dashboard {
     /**
      * Register plugin settings
      *
-     * @return  void  
+     * @return  void
      */
 	public function register_settings() {
 		register_setting( 'whp-settings-group', 'whp_enabled_post_types' );

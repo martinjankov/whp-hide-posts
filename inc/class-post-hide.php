@@ -1,9 +1,5 @@
 <?php
-/**
- * Manages hiding posts that have some hide option enabled.
- *
- * @package  wordpress-hide-posts
- */
+namespace MartinCV\WHP;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,9 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WHP_Post_Hide class.
+ * Post_Hide class.
  */
-class WHP_Post_Hide {
+class Post_Hide {
+    use \MartinCV\WHP\Traits\Singleton;
+
 	/**
 	 * Enabled post types
 	 *
@@ -22,10 +20,12 @@ class WHP_Post_Hide {
 	private $_enabled_post_types = [];
 
 	/**
-	 * Function: __construct
-	 */
-	public function __construct() {
-		$this->_enabled_post_types = get_option( 'whp_enabled_post_types' );
+    * Initialize class
+    *
+    * @return  void
+    */
+	private function initialize() {
+		$this->_enabled_post_types = whp_get_enabled_post_types();
 
 		if ( empty( $this->_enabled_post_types ) ) {
 			$this->_enabled_post_types = ['post'];
@@ -35,6 +35,7 @@ class WHP_Post_Hide {
 		add_action( 'parse_query', array( $this, 'parse_query') );
 		add_filter( 'get_next_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
 		add_filter( 'get_previous_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
+        add_filter( 'widget_posts_args', array( $this, 'hide_from_recent_post_widget' ), 10, 1 );
 	}
 
 	/**
@@ -59,7 +60,15 @@ class WHP_Post_Hide {
 	 * @return void
 	 */
 	public function exclude_posts( $query ) {
-		if ( ! is_admin() && 'nav_menu_item' !== $query->get( 'post_type' ) && 'attachment' !== $query->get( 'post_type' ) ) {
+        $q_post_type = $query->get( 'post_type' );
+
+        if ( ! is_admin() || ( is_admin() && wp_doing_ajax() ) &&
+            (
+                empty( $query->get( 'post_type' ) ) ||
+                ( ! is_array( $q_post_type ) && in_array( $q_post_type, $this->_enabled_post_types ) ) ||
+                ( is_array( $q_post_type ) && ! empty( array_intersect( $q_post_type, $this->_enabled_post_types ) ) )
+            )
+        ) {
 			// Hide on homepage.
 			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
@@ -87,9 +96,30 @@ class WHP_Post_Hide {
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
+            // Hide on Tax.
+			if ( is_tax() ) {
+                $queried_object = get_queried_object();
+
+                $meta_query = (array) $query->get( 'meta_query' );
+
+                $meta_query[] = array(
+                    'key'     => '_whp_hide_on_cpt_tax',
+                    'value'   => $queried_object->taxonomy,
+                    'compare' => 'NOT LIKE',
+                );
+
+                $query->set( 'meta_query', $meta_query );
+			}
+
 			// Hide on Authors.
 			if ( is_author() ) {
 				$query->set( 'meta_key', '_whp_hide_on_authors' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
+			// Hide on CPT Archive.
+			if ( is_archive( $q_post_type ) ) {
+				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
@@ -122,9 +152,9 @@ class WHP_Post_Hide {
 	/**
 	 * Hide post from post navigation
 	 *
-	 * @param   string  $where  
+	 * @param   string  $where
 	 *
-	 * @return  string          
+	 * @return  string
 	 */
 	public function hide_from_post_navigation( $where ) {
 		$hidden_on_post_navigation = whp_hidden_posts_ids( 'post', 'post_navigation' );
@@ -132,14 +162,33 @@ class WHP_Post_Hide {
 		if ( empty( $hidden_on_post_navigation ) ) {
 			return $where;
 		}
-	
+
 		$ids_placeholders = array_fill( 0, count( $hidden_on_post_navigation ), '%d' );
 		$ids_placeholders = implode( ', ', $ids_placeholders );
-		
+
 		global $wpdb;
-		
+
 		$where .= $wpdb->prepare( " AND ID NOT IN ( $ids_placeholders )", ...$hidden_on_post_navigation );
 
 		return $where;
 	}
+
+    /**
+     * Hide posts from default WordPress recent post widget
+     *
+     * @param   array  $query_args
+     *
+     * @return  array
+     */
+    public function hide_from_recent_post_widget( $query_args ) {
+        $hidden_on_recent_posts = whp_hidden_posts_ids( 'post', 'recent_posts' );
+
+        if ( empty( $hidden_on_recent_posts ) ) {
+            return $query_args;
+        }
+
+        $query_args['post__not_in'] = $hidden_on_recent_posts;
+
+        return $query_args;
+    }
 }
