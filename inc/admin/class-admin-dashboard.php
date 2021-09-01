@@ -1,53 +1,67 @@
 <?php
+/**
+ * Admin dashboard settings
+ *
+ * @package    WordPressHidePosts
+ */
+
 namespace MartinCV\WHP\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Admin dashboard class
+ */
 class Admin_Dashboard {
-    use \MartinCV\WHP\Traits\Singleton;
+	use \MartinCV\WHP\Traits\Singleton;
 
+	/**
+	 * Initialize class
+	 *
+	 * @return  void
+	 */
 	private function initialize() {
-		add_action( 'admin_init', [ $this, 'register_settings' ] );
-		add_action( 'admin_menu', [ $this, 'menu' ] );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_menu', array( $this, 'menu' ) );
 	}
 
-    /**
-     * Register new submenu and Settings
-     *
-     * @return  void
-     */
+	/**
+	 * Register new submenu and Settings
+	 *
+	 * @return  void
+	 */
 	public function menu() {
 		add_submenu_page(
 			'options-general.php',
-            __( 'Hide Posts', 'whp' ),
-            __( 'Hide Posts', 'whp' ),
-            'administrator',
-            'whp-settings',
-            [ $this, 'settings' ]
-        );
+			__( 'Hide Posts', 'whp-hide-posts' ),
+			__( 'Hide Posts', 'whp-hide-posts' ),
+			'administrator',
+			'whp-settings',
+			array( $this, 'settings' )
+		);
 	}
 
-    /**
-     * Show the settings form with options
-     *
-     * @return  void
-     */
+	/**
+	 * Show the settings form with options
+	 *
+	 * @return  void
+	 */
 	public function settings() {
-        $post_types = get_post_types( [ 'public' => true ], 'object' );
-        $enabled_post_types = get_option( 'whp_enabled_post_types' );
-        $whp_disable_hidden_on_column = get_option( 'whp_disable_hidden_on_column' );
+		$post_types                   = get_post_types( array( 'public' => true ), 'object' );
+		$enabled_post_types           = whp_get_enabled_post_types();
+		$whp_disable_hidden_on_column = get_option( 'whp_disable_hidden_on_column' );
 
-        @include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-dashboard.php';
+		include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-dashboard.php';
 	}
 
-    /**
-     * Register plugin settings
-     *
-     * @return  void
-     */
+	/**
+	 * Register plugin settings
+	 *
+	 * @return  void
+	 */
 	public function register_settings() {
 		register_setting( 'whp-settings-group', 'whp_enabled_post_types' );
 		register_setting( 'whp-settings-group', 'whp_disable_hidden_on_column' );

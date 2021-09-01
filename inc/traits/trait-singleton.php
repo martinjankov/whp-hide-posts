@@ -1,8 +1,14 @@
 <?php
+/**
+ * Signleton trait
+ *
+ * @package    WordPressHidePosts
+ */
+
 namespace MartinCV\WHP\Traits;
 
 trait Singleton {
-    /**
+	/**
 	 * Instance of the object
 	 *
 	 * @var \Object

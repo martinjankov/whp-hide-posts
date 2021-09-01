@@ -2,35 +2,51 @@
 /**
  * Autoloader
  *
- * @param   string  $class
+ * @package    WordPressHidePosts
+ */
+
+/**
+ * Autoloader
+ *
+ * @param   string $class The class to be loaded.
  *
  * @return  boolean
  */
 function whp_plugin_autoloader( $class ) {
-    $dir = '/inc';
-    $type = 'class';
+	$type = 'class';
 
-	switch ( $class ) {
-		case false !== strpos( $class, 'MartinCV\\WHP\\Admin\\' ):
-										$class = strtolower( str_replace( 'MartinCV\\WHP\\Admin', '', $class ) );
-										$dir .= '/admin';
-										break;
-		case false !== strpos( $class, 'MartinCV\\WHP\\Traits\\' ):
-                                        $class = strtolower( str_replace( 'MartinCV\\WHP\\Traits', '', $class ) );
-                                        $dir .= '/traits';
-                                        $type = 'trait';
-										break;
-		case false !== strpos( $class, 'MartinCV\\WHP\\Core\\' ):
-                                        $class = strtolower( str_replace( 'MartinCV\\WHP\\Core', '', $class ) );
-                                        $dir .= '/core';
-										break;
-		case false !== strpos( $class, 'MartinCV\\WHP\\' ):
-                                        $class = strtolower( str_replace( 'MartinCV\\WHP', '', $class ) );
-										break;
-		default: return;
+	$config = array(
+		'root'          => 'inc',
+		'namespace_map' => array(
+			'MartinCV\WHP\Admin'  => '/admin',
+			'MartinCV\WHP\Traits' => '/traits',
+			'MartinCV\WHP\Core'   => '/core',
+			'MartinCV\WHP'        => '',
+		),
+	);
+
+	$file_parts       = explode( '\\', $class );
+	$count_file_parts = count( $file_parts );
+	$class_name       = $file_parts[ $count_file_parts - 1 ];
+	unset( $file_parts[ $count_file_parts - 1 ] );
+
+	$namespace     = implode( '\\', $file_parts );
+	$namespace_map = $config['namespace_map'];
+
+	if ( ! isset( $namespace_map[ $namespace ] ) ) {
+		return false;
 	}
 
-	$filename = WHP_PLUGIN_DIR . $dir . str_replace( '_', '-', str_replace( '\\', '/' . $type . '-', $class ) ) . '.php';
+	$root_dir = '/' !== $config['root'] ? $config['root'] : '';
+	$dir      = $root_dir . $namespace_map[ $namespace ];
+
+	if ( strpos( $dir, '/trait' ) ) {
+		$type = 'trait';
+	}
+
+	$class = '/' . $type . '-' . str_replace( '_', '-', strtolower( $class_name ) ) . '.php';
+
+	$filename = WHP_PLUGIN_DIR . $dir . $class;
 
 	if ( file_exists( $filename ) ) {
 		require_once $filename;
