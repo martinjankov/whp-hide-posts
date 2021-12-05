@@ -86,6 +86,13 @@ class Post_Hide {
 				$query->set( 'meta_key', '_whp_hide_on_blog_page' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
+
+			// Hide on CPT Archive.
+			if ( 'post' !== $q_post_type && is_archive( $q_post_type ) ) {
+				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
 			// Hide on Categories.
 			if ( is_category() ) {
 				$query->set( 'meta_key', '_whp_hide_on_categories' );
@@ -122,12 +129,6 @@ class Post_Hide {
 			// Hide on Authors.
 			if ( is_author() ) {
 				$query->set( 'meta_key', '_whp_hide_on_authors' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide on CPT Archive.
-			if ( is_archive( $q_post_type ) ) {
-				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 

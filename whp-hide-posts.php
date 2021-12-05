@@ -118,6 +118,7 @@ final class WordpressHidePosts {
 			\MartinCV\WHP\Admin\Post_Hide_Metabox::get_instance();
 		} else {
 			\MartinCV\WHP\Post_Hide::get_instance();
+			\MartinCV\WHP\Zeen_Theme::get_instance();
 		}
 	}
 
