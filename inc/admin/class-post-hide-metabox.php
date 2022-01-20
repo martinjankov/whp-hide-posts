@@ -58,19 +58,34 @@ class Post_Hide_Metabox {
 			return;
 		}
 
-		wp_register_script(
-			'whp-admin-post-script',
-			WHP_PLUGIN_URL . 'assets/admin/js/whp-script.js',
+		wp_enqueue_style(
+			'whp-select2',
+			WHP_PLUGIN_URL . 'assets/libs/select2/css/select2.min.css',
+			array(),
+			WHP_VERSION
+		);
+
+		wp_enqueue_script(
+			'whp-select2',
+			WHP_PLUGIN_URL . 'assets/libs/select2/js/select2.min.js',
 			array( 'jquery' ),
-			filemtime( WHP_PLUGIN_DIR . 'assets/admin/js/whp-script.js' ),
+			WHP_VERSION,
 			true
 		);
 
-		wp_register_style(
+		wp_enqueue_script(
+			'whp-admin-post-script',
+			WHP_PLUGIN_URL . 'assets/admin/js/whp-script.js',
+			array( 'jquery' ),
+			WHP_VERSION,
+			true
+		);
+
+		wp_enqueue_style(
 			'whp-admin-post-style',
 			WHP_PLUGIN_URL . 'assets/admin/css/whp-style.css',
 			array(),
-			filemtime( WHP_PLUGIN_DIR . 'assets/admin/css/whp-style.css' )
+			WHP_VERSION
 		);
 	}
 
@@ -234,8 +249,6 @@ class Post_Hide_Metabox {
 
 		$enabled_post_types = whp_get_enabled_post_types();
 
-		wp_enqueue_script( 'whp-admin-post-script' );
-
 		include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-post-metabox.php';
 	}
 
@@ -274,13 +287,13 @@ class Post_Hide_Metabox {
 		$data['_whp_hide_on_search']          = ! empty( $_POST['whp_hide_on_search'] ) ? true : false;
 		$data['_whp_hide_on_tags']            = ! empty( $_POST['whp_hide_on_tags'] ) ? true : false;
 		$data['_whp_hide_on_authors']         = ! empty( $_POST['whp_hide_on_authors'] ) ? true : false;
-		$data['_hide_in_rss_feed']            = ! empty( $_POST['hide_in_rss_feed'] ) ? true : false;
+		$data['_whp_hide_in_rss_feed']        = ! empty( $_POST['whp_hide_in_rss_feed'] ) ? true : false;
 		$data['_whp_hide_on_blog_page']       = ! empty( $_POST['whp_hide_on_blog_page'] ) ? true : false;
 		$data['_whp_hide_on_date']            = ! empty( $_POST['whp_hide_on_date'] ) ? true : false;
 		$data['_whp_hide_on_post_navigation'] = ! empty( $_POST['whp_hide_on_post_navigation'] ) ? true : false;
 		$data['_whp_hide_on_recent_posts']    = ! empty( $_POST['whp_hide_on_recent_posts'] ) ? true : false;
 		$data['_whp_hide_on_cpt_archive']     = ! empty( $_POST['whp_hide_on_cpt_archive'] ) ? true : false;
-		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? sanitize_text_field( wp_unslash( $_POST['whp_hide_on_cpt_tax'] ) ) : false;
+		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? $_POST['whp_hide_on_cpt_tax'] : false;
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {
 			$data['_whp_hide_on_store']            = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;
@@ -292,6 +305,27 @@ class Post_Hide_Metabox {
 
 		// Save meta.
 		$this->save_meta_data( $data, $post_id );
+
+		$hide_types = array(
+			'all',
+			'front_page',
+			'blog_page',
+			'categories',
+			'search',
+			'tags',
+			'authors',
+			'date',
+			'post_navigation',
+			'recent_posts',
+			'cpt_archive',
+			'cpt_tax',
+		);
+
+		foreach ( $hide_types as $hide_type ) {
+			$key = 'whp_' . $post->post_type . '_' . $hide_type;
+
+			delete_transient( $key );
+		}
 	}
 
 	/**

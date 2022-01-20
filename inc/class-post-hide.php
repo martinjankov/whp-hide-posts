@@ -116,10 +116,11 @@ class Post_Hide {
 				$queried_object = get_queried_object();
 
 				$meta_query = (array) $query->get( 'meta_query' );
+				$meta_query = array_filter( $meta_query );
 
 				$meta_query[] = array(
 					'key'     => '_whp_hide_on_cpt_tax',
-					'value'   => $queried_object->taxonomy,
+					'value'   => ':"' . $queried_object->taxonomy . '";',
 					'compare' => 'NOT LIKE',
 				);
 

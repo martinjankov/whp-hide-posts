@@ -21,13 +21,6 @@ class Zeen_Theme {
 	use \MartinCV\WHP\Traits\Singleton;
 
 	/**
-	 * Enabled post types
-	 *
-	 * @var array
-	 */
-	private $enabled_post_types = array();
-
-	/**
 	 * Initialize class
 	 *
 	 * @return  void

@@ -1,26 +1,34 @@
-(function($){
-    $(function() {
-        const $selectAll = $('#whp_select_all');
+(function ($) {
+	$(function () {
+		const $selectAll = $("#whp_select_all");
 
-        if($selectAll.length == 0) {
-            return;
-        }
+		$("#whp_hide_on_cpt_tax").select2({
+			multiple: true,
+			width: "100%",
+			placeholder: "Select Taxonomy",
+		});
 
-        const totalChecked = $('input[type=checkbox][id^=whp_hide_]:checked').length;
-        const totalOptions =  $('input[type=checkbox][id^=whp_hide_]').length;
+		if ($selectAll.length == 0) {
+			return;
+		}
 
-        if(totalChecked === totalOptions) {
-            $selectAll.attr('checked', true);
-        }
+		const totalChecked = $(
+			"input[type=checkbox][id^=whp_hide_]:checked"
+		).length;
+		const totalOptions = $("input[type=checkbox][id^=whp_hide_]").length;
 
-        const toggleAllOptions = function() {
-            if($(this).is(':checked')) {
-                $('input[type=checkbox][id^=whp_hide_]').prop('checked', true);
-            } else {
-                $('input[type=checkbox][id^=whp_hide_]').prop('checked', false);
-            }
-        }
+		if (totalChecked === totalOptions) {
+			$selectAll.attr("checked", true);
+		}
 
-        $selectAll.on('change', toggleAllOptions);
-    })
-})(jQuery)
+		const toggleAllOptions = function () {
+			if ($(this).is(":checked")) {
+				$("input[type=checkbox][id^=whp_hide_]").prop("checked", true);
+			} else {
+				$("input[type=checkbox][id^=whp_hide_]").prop("checked", false);
+			}
+		};
+
+		$selectAll.on("change", toggleAllOptions);
+	});
+})(jQuery);

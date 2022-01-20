@@ -47,7 +47,13 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
 	function whp_hidden_posts_ids( $post_type = 'post', $from = 'all' ) {
 		$key = 'whp_' . $post_type . '_' . $from;
 
-		$hidden_posts = wp_cache_get( $key );
+		$hidden_posts = wp_cache_get( $key, 'whp' );
+
+		if ( $hidden_posts ) {
+			return $hidden_posts;
+		}
+
+		$hidden_posts = get_transient( $key );
 
 		if ( $hidden_posts ) {
 			return $hidden_posts;
@@ -207,6 +213,8 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
 		$hidden_posts = $hidden_posts->posts;
 
 		wp_cache_set( $key, $hidden_posts, 'whp' );
+
+		set_transient( $key, $hidden_posts, 0 );
 
 		return $hidden_posts;
 	}

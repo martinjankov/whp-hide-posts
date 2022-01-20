@@ -8,6 +8,19 @@
 global $post;
 $taxonomies = get_object_taxonomies( $post );
 
+$built_in = array(
+	'category',
+	'post_tag',
+	'post_format',
+);
+
+$taxonomies = array_filter(
+	$taxonomies,
+	function( $taxonomy ) use ( $built_in ) {
+		return ! in_array( $taxonomy, $built_in, true );
+	}
+);
+
 ?>
 <div class='whp_hide_posts'>
 	<p>
@@ -106,7 +119,7 @@ $taxonomies = get_object_taxonomies( $post );
 				<?php esc_html_e( 'Hide on tax:', 'whp-hide-posts' ); ?>
 				<select name="whp_hide_on_cpt_tax[]" id="whp_hide_on_cpt_tax" multiple>
 					<?php foreach ( $taxonomies as $wp_tax ) : ?>
-						<option value="<?php echo esc_attr( $wp_tax ); ?>" <?php is_array( $whp_hide_on_cpt_tax ) && selected( in_array( $wp_tax, $whp_hide_on_cpt_tax ), 1 ); ?>>
+						<option value="<?php echo esc_attr( $wp_tax ); ?>" <?php is_array( $whp_hide_on_cpt_tax ) && selected( in_array( $wp_tax, $whp_hide_on_cpt_tax, true ), 1 ); ?>>
 							<?php echo esc_html( ucfirst( $wp_tax ) ); ?>
 						</option>
 					<?php endforeach; ?>
