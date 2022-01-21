@@ -5,27 +5,11 @@
  * @package WordPressHidePosts
  */
 
-global $post;
-$taxonomies = get_object_taxonomies( $post );
-
-$built_in = array(
-	'category',
-	'post_tag',
-	'post_format',
-);
-
-$taxonomies = array_filter(
-	$taxonomies,
-	function( $taxonomy ) use ( $built_in ) {
-		return ! in_array( $taxonomy, $built_in, true );
-	}
-);
-
 ?>
 <div class='whp_hide_posts'>
 	<p>
 		<label for='whp_select_all'>
-			<input type='checkbox' <?php checked( $whp_select_all, 1 ); ?> id='whp_select_all'>
+			<input type='checkbox' id='whp_select_all'>
 			<strong><?php esc_html_e( 'SELECT ALL', 'whp-hide-posts' ); ?></strong>
 		</label>
 	</p>
@@ -59,7 +43,7 @@ $taxonomies = array_filter(
 			<?php esc_html_e( 'Hide on authors page', 'whp-hide-posts' ); ?>
 		</label>
 	</p>
-	<?php if ( whp_is_custom_post_type( $post ) ) : ?>
+	<?php if ( whp_plugin()->is_custom_post_type( $post ) ) : ?>
 		<p>
 			<label for='whp_hide_on_cpt_archive'>
 				<input type='checkbox' name="whp_hide_on_cpt_archive" value='1' <?php checked( $whp_hide_on_cpt_archive, 1 ); ?> id='whp_hide_on_cpt_archive'>
@@ -98,7 +82,7 @@ $taxonomies = array_filter(
 			<?php esc_html_e( 'Hide from recent posts widget', 'whp-hide-posts' ); ?>
 		</label>
 	</p>
-	<?php if ( whp_wc_exists() && whp_admin_wc_product() ) : ?>
+	<?php if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) : ?>
 		<h4><?php esc_html_e( 'Woocommerce options', 'whp-hide-posts' ); ?></h4>
 		<p>
 			<label for='whp_hide_on_store'>
@@ -120,7 +104,7 @@ $taxonomies = array_filter(
 				<select name="whp_hide_on_cpt_tax[]" id="whp_hide_on_cpt_tax" multiple>
 					<?php foreach ( $taxonomies as $wp_tax ) : ?>
 						<option value="<?php echo esc_attr( $wp_tax ); ?>" <?php is_array( $whp_hide_on_cpt_tax ) && selected( in_array( $wp_tax, $whp_hide_on_cpt_tax, true ), 1 ); ?>>
-							<?php echo esc_html( ucfirst( $wp_tax ) ); ?>
+							<?php echo esc_html( ucfirst( str_replace( '_', ' ', $wp_tax ) ) ); ?>
 						</option>
 					<?php endforeach; ?>
 				</select>

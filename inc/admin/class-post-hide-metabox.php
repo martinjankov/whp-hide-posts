@@ -52,7 +52,7 @@ class Post_Hide_Metabox {
 			return;
 		}
 
-		$enabled_post_types = whp_get_enabled_post_types();
+		$enabled_post_types = whp_plugin()->get_enabled_post_types();
 
 		if ( ! in_array( $post->post_type, $enabled_post_types, true ) ) {
 			return;
@@ -95,7 +95,7 @@ class Post_Hide_Metabox {
 	 * @return void
 	 */
 	public function add_metabox() {
-		$post_types = whp_get_enabled_post_types();
+		$post_types = whp_plugin()->get_enabled_post_types();
 
 		add_meta_box(
 			'hide_posts',
@@ -148,7 +148,7 @@ class Post_Hide_Metabox {
 		$whp_hide_on_cpt_archive     = get_post_meta( $post_id, '_whp_hide_on_cpt_archive', true );
 		$whp_hide_on_cpt_tax         = get_post_meta( $post_id, '_whp_hide_on_cpt_tax', true );
 
-		if ( whp_wc_exists() && whp_admin_wc_product() ) {
+		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$whp_hide_on_store            = get_post_meta( $post_id, '_whp_hide_on_store', true );
 			$whp_hide_on_product_category = get_post_meta( $post_id, '_whp_hide_on_product_category', true );
 		}
@@ -228,7 +228,6 @@ class Post_Hide_Metabox {
 	public function metabox_callback( $post ) {
 		wp_nonce_field( 'wp_metabox_nonce', 'wp_metabox_nonce_value' );
 
-		$whp_select_all              = get_post_meta( $post->ID, '_whp_select_all', true );
 		$whp_hide_on_frontpage       = get_post_meta( $post->ID, '_whp_hide_on_frontpage', true );
 		$whp_hide_on_categories      = get_post_meta( $post->ID, '_whp_hide_on_categories', true );
 		$whp_hide_on_search          = get_post_meta( $post->ID, '_whp_hide_on_search', true );
@@ -242,14 +241,25 @@ class Post_Hide_Metabox {
 		$whp_hide_on_cpt_archive     = get_post_meta( $post->ID, '_whp_hide_on_cpt_archive', true );
 		$whp_hide_on_cpt_tax         = get_post_meta( $post->ID, '_whp_hide_on_cpt_tax', true );
 
-		if ( whp_wc_exists() && whp_admin_wc_product() ) {
+		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$whp_hide_on_store            = get_post_meta( $post->ID, '_whp_hide_on_store', true );
 			$whp_hide_on_product_category = get_post_meta( $post->ID, '_whp_hide_on_product_category', true );
 		}
 
-		$enabled_post_types = whp_get_enabled_post_types();
+		$enabled_post_types = whp_plugin()->get_enabled_post_types();
 
-		include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-post-metabox.php';
+		$taxonomies = get_object_taxonomies( $post );
+
+		$built_in = \MartinCV\WHP\Core\Constants::BUILT_IN_TAXONOMIES;
+
+		$taxonomies = array_filter(
+			$taxonomies,
+			function( $taxonomy ) use ( $built_in ) {
+				return ! in_array( $taxonomy, $built_in, true );
+			}
+		);
+
+		require_once WHP_PLUGIN_DIR . 'views/admin/template-admin-post-metabox.php';
 	}
 
 	/**
@@ -281,6 +291,12 @@ class Post_Hide_Metabox {
 			return $post_id;
 		}
 
+		$enabled_post_types = whp_plugin()->get_enabled_post_types();
+
+		if ( ! in_array( $post->post_type, $enabled_post_types, true ) ) {
+			return $post_id;
+		}
+
 		// Data to be stored in the database.
 		$data['_whp_hide_on_frontpage']       = ! empty( $_POST['whp_hide_on_frontpage'] ) ? true : false;
 		$data['_whp_hide_on_categories']      = ! empty( $_POST['whp_hide_on_categories'] ) ? true : false;
@@ -301,25 +317,12 @@ class Post_Hide_Metabox {
 		}
 
 		// Sanitize inputs.
-		$this->_sanitize_inputs( $data );
+		$this->sanitize_inputs( $data );
 
 		// Save meta.
 		$this->save_meta_data( $data, $post_id );
 
-		$hide_types = array(
-			'all',
-			'front_page',
-			'blog_page',
-			'categories',
-			'search',
-			'tags',
-			'authors',
-			'date',
-			'post_navigation',
-			'recent_posts',
-			'cpt_archive',
-			'cpt_tax',
-		);
+		$hide_types = array_keys( \MartinCV\WHP\Core\Constants::HIDDEN_POSTS_KEYS_LIST );
 
 		foreach ( $hide_types as $hide_type ) {
 			$key = 'whp_' . $post->post_type . '_' . $hide_type;
@@ -357,7 +360,7 @@ class Post_Hide_Metabox {
 	 *
 	 * @return void
 	 */
-	private function _sanitize_inputs( &$post_data ) {
+	private function sanitize_inputs( &$post_data ) {
 		$sanitized_data = array();
 
 		foreach ( $post_data as $key => $value ) {
@@ -365,7 +368,7 @@ class Post_Hide_Metabox {
 				$sanitized_data[ $key ] = array();
 
 				foreach ( $value as $v ) {
-					$sanitized_data[ $key ][] = sanitize_text_field( $v );
+					$sanitized_data[ $key ][] = sanitize_text_field( wp_unslahs( $v ) );
 				}
 			} else {
 				$sanitized_data[ $key ] = sanitize_meta( $key, $value, 'post' );

@@ -133,3 +133,14 @@ final class WordpressHidePosts {
 }
 
 WordpressHidePosts::instance();
+
+if ( ! function_exists( 'whp_plugin' ) ) {
+	/**
+	 * Instance of the Plugin class
+	 *
+	 * @return \MartinCV\WHP\Core\Plugin
+	 */
+	function whp_plugin() {
+		return \MartinCV\WHP\Core\Plugin::get_instance();
+	}
+}
