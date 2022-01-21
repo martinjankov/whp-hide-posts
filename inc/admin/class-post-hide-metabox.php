@@ -324,6 +324,7 @@ class Post_Hide_Metabox {
 		foreach ( $hide_types as $hide_type ) {
 			$key = 'whp_' . $post->post_type . '_' . $hide_type;
 
+			wp_cache_delete( $key, 'whp' );
 			delete_transient( $key );
 		}
 	}

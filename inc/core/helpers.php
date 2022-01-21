@@ -45,176 +45,73 @@ if ( ! function_exists( 'whp_hidden_posts_ids' ) ) {
 	 * @return  array
 	 */
 	function whp_hidden_posts_ids( $post_type = 'post', $from = 'all' ) {
-		$key = 'whp_' . $post_type . '_' . $from;
+		$cache_key = 'whp_' . $post_type . '_' . $from;
 
-		$hidden_posts = wp_cache_get( $key, 'whp' );
+		$hidden_posts = wp_cache_get( $cache_key, 'whp' );
+
+		if ( $hidden_posts ) {
+			return $hidden_posts;
+		}
+
+		$hidden_posts = get_transient( $cache_key );
 
 		if ( $hidden_posts ) {
 			return $hidden_posts;
 		}
 
-		$hidden_posts = get_transient( $key );
-
-		if ( $hidden_posts ) {
-			return $hidden_posts;
-		}
+		$operator = '=';
 
 		switch ( $from ) {
 			case 'all':
-					$meta_query = array(
-						'relation' => 'OR',
-						array(
-							'key'     => '_whp_hide_on_frontpage',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_blog_page',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_categories',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_search',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_tags',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_authors',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_date',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_post_navigation',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_recent_posts',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_cpt_archive',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key'     => '_whp_hide_on_cpt_tax',
-							'compare' => 'EXISTS',
-						),
-					);
+				$operator = 'LIKE';
+				$key      = '_whp_hide_%';
 				break;
 			case 'front_page':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_frontpage',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_frontpage';
 				break;
 			case 'blog_page':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_blog_page',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_blog_page';
 				break;
 			case 'categories':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_categories',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_categories';
 				break;
 			case 'search':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_search',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_search';
 				break;
 			case 'tags':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_tags',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_tags';
 				break;
 			case 'authors':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_authors',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_authors';
 				break;
 			case 'date':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_date',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_date';
 				break;
 			case 'post_navigation':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_post_navigation',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_post_navigation';
 				break;
 			case 'recent_posts':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_recent_posts',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_recent_posts';
 				break;
 			case 'cpt_archive':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_cpt_archive',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_cpt_archive';
 				break;
 			case 'cpt_tax':
-				$meta_query = array(
-					array(
-						'key'     => '_whp_hide_on_cpt_tax',
-						'compare' => 'EXISTS',
-					),
-				);
+				$key = '_whp_hide_on_cpt_tax';
 				break;
 			default:
 				return array();
 		}
 
-		$hidden_posts = new \WP_Query(
-			array(
-				'post_type'      => $post_type,
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-				'meta_query'     => $meta_query,
-			)
-		);
+		global $wpdb;
 
-		$hidden_posts = $hidden_posts->posts;
+		$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key {$operator} %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
 
-		wp_cache_set( $key, $hidden_posts, 'whp' );
+		$hidden_posts = $wpdb->get_col( $sql );
 
-		set_transient( $key, $hidden_posts, 0 );
+		wp_cache_set( $cache_key, $hidden_posts, 'whp' );
+
+		set_transient( $cache_key, $hidden_posts, WEEK_IN_SECONDS );
 
 		return $hidden_posts;
 	}
