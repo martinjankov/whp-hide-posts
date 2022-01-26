@@ -31,7 +31,7 @@ class Post_Hide {
 	 * @return  void
 	 */
 	private function initialize() {
-		$this->enabled_post_types = whp_get_enabled_post_types();
+		$this->enabled_post_types = whp_plugin()->get_enabled_post_types();
 
 		if ( empty( $this->enabled_post_types ) ) {
 			$this->enabled_post_types = array( 'post' );
@@ -42,6 +42,28 @@ class Post_Hide {
 		add_filter( 'get_next_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
 		add_filter( 'get_previous_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
 		add_filter( 'widget_posts_args', array( $this, 'hide_from_recent_post_widget' ), 10, 1 );
+
+		foreach ( $this->enabled_post_types as $pt ) {
+			add_filter( "rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * Hide from rest api
+	 *
+	 * @param  array           $args    The query args.
+	 * @param  WP_REST_Request $request The request.
+	 *
+	 * @return array
+	 */
+	public function hide_from_rest_api( $args, $request ) {
+		$hidden_ids = whp_plugin()->get_hidden_posts_ids( $args['post_type'], 'rest_api' );
+
+		if ( ! empty( $hidden_ids ) ) {
+			$args['post__not_in'] = $hidden_ids;
+		}
+
+		return $args;
 	}
 
 	/**

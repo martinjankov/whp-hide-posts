@@ -31,6 +31,7 @@ class Constants {
 		'recent_posts'    => '_whp_hide_on_recent_posts',
 		'cpt_archive'     => '_whp_hide_on_cpt_archive',
 		'cpt_tax'         => '_whp_hide_on_cpt_tax',
+		'rest_api'        => '_whp_hide_on_rest_api',
 	);
 
 	const BUILT_IN_TAXONOMIES = array(

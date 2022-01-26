@@ -82,6 +82,12 @@
 			<?php esc_html_e( 'Hide from recent posts widget', 'whp-hide-posts' ); ?>
 		</label>
 	</p>
+	<p>
+		<label for='whp_hide_on_rest_api'>
+			<input type='checkbox' name="whp_hide_on_rest_api" value='1' <?php checked( $whp_hide_on_rest_api, 1 ); ?> id='whp_hide_on_rest_api'>
+			<?php esc_html_e( 'Hide from REST API', 'whp-hide-posts' ); ?>
+		</label>
+	</p>
 	<?php if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) : ?>
 		<h4><?php esc_html_e( 'Woocommerce options', 'whp-hide-posts' ); ?></h4>
 		<p>

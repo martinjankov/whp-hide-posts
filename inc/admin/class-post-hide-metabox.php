@@ -147,6 +147,7 @@ class Post_Hide_Metabox {
 		$whp_hide_on_recent_posts    = get_post_meta( $post_id, '_whp_hide_on_recent_posts', true );
 		$whp_hide_on_cpt_archive     = get_post_meta( $post_id, '_whp_hide_on_cpt_archive', true );
 		$whp_hide_on_cpt_tax         = get_post_meta( $post_id, '_whp_hide_on_cpt_tax', true );
+		$whp_hide_on_rest_api        = get_post_meta( $post_id, '_whp_hide_on_rest_api', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$whp_hide_on_store            = get_post_meta( $post_id, '_whp_hide_on_store', true );
@@ -203,6 +204,10 @@ class Post_Hide_Metabox {
 			$whp_hide_on .= __( 'CPT tax page', 'whp-hide-posts' ) . ', ';
 		}
 
+		if ( $whp_hide_on_rest_api ) {
+			$whp_hide_on .= __( 'REST API', 'whp-hide-posts' ) . ', ';
+		}
+
 		if ( isset( $whp_hide_on_store ) && $whp_hide_on_store ) {
 			$whp_hide_on .= __( 'Store page', 'whp-hide-posts' ) . ', ';
 		}
@@ -240,6 +245,7 @@ class Post_Hide_Metabox {
 		$whp_hide_on_recent_posts    = get_post_meta( $post->ID, '_whp_hide_on_recent_posts', true );
 		$whp_hide_on_cpt_archive     = get_post_meta( $post->ID, '_whp_hide_on_cpt_archive', true );
 		$whp_hide_on_cpt_tax         = get_post_meta( $post->ID, '_whp_hide_on_cpt_tax', true );
+		$whp_hide_on_rest_api        = get_post_meta( $post->ID, '_whp_hide_on_rest_api', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$whp_hide_on_store            = get_post_meta( $post->ID, '_whp_hide_on_store', true );
@@ -310,6 +316,7 @@ class Post_Hide_Metabox {
 		$data['_whp_hide_on_recent_posts']    = ! empty( $_POST['whp_hide_on_recent_posts'] ) ? true : false;
 		$data['_whp_hide_on_cpt_archive']     = ! empty( $_POST['whp_hide_on_cpt_archive'] ) ? true : false;
 		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? $_POST['whp_hide_on_cpt_tax'] : false;
+		$data['_whp_hide_on_rest_api']        = ! empty( $_POST['whp_hide_on_rest_api'] ) ? true : false;
 
 		if ( whp_wc_exists() && whp_admin_wc_product() ) {
 			$data['_whp_hide_on_store']            = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;
@@ -368,7 +375,7 @@ class Post_Hide_Metabox {
 				$sanitized_data[ $key ] = array();
 
 				foreach ( $value as $v ) {
-					$sanitized_data[ $key ][] = sanitize_text_field( wp_unslahs( $v ) );
+					$sanitized_data[ $key ][] = sanitize_text_field( wp_unslash( $v ) );
 				}
 			} else {
 				$sanitized_data[ $key ] = sanitize_meta( $key, $value, 'post' );
