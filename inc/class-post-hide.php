@@ -33,11 +33,7 @@ class Post_Hide {
 	private function initialize() {
 		$this->enabled_post_types = whp_plugin()->get_enabled_post_types();
 
-		if ( empty( $this->enabled_post_types ) ) {
-			$this->enabled_post_types = array( 'post' );
-		}
-
-		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ) );
+		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 99 );
 		add_action( 'parse_query', array( $this, 'parse_query' ) );
 		add_filter( 'get_next_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
 		add_filter( 'get_previous_post_where', array( $this, 'hide_from_post_navigation' ), 10, 1 );
@@ -71,7 +67,7 @@ class Post_Hide {
 	 *
 	 * Based on the patch from @mattonomics in #27015
 	 *
-	 * @param \WP_Query $query The wordpress query object.
+	 * @param \WP_Query $query The WordPress query object.
 	 *
 	 * @see http://wordpress.stackexchange.com/a/188320/26350
 	 */
@@ -95,7 +91,7 @@ class Post_Hide {
 		if ( ! is_admin() || ( is_admin() && wp_doing_ajax() ) &&
 			(
 				empty( $query->get( 'post_type' ) ) ||
-				( ! is_array( $q_post_type ) && in_array( $q_post_type, $this->enabled_post_types ) ) ||
+				( ! is_array( $q_post_type ) && in_array( $q_post_type, $this->enabled_post_types, true ) ) ||
 				( is_array( $q_post_type ) && ! empty( array_intersect( $q_post_type, $this->enabled_post_types ) ) )
 			)
 		) {
@@ -103,14 +99,28 @@ class Post_Hide {
 			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
-			} else if ( is_home() ) {
+			} elseif ( is_home() ) {
 				// Hide on static blog page.
 				$query->set( 'meta_key', '_whp_hide_on_blog_page' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
-			// Hide on CPT Archive.
-			if ( 'post' !== $q_post_type && is_archive( $q_post_type ) ) {
+			// Hide on Tax.
+			if ( is_tax() ) {
+				$queried_object = get_queried_object();
+
+				$meta_query = (array) $query->get( 'meta_query' );
+				$meta_query = array_filter( $meta_query );
+
+				$meta_query[] = array(
+					'key'     => '_whp_hide_on_cpt_tax',
+					'value'   => ':"' . $queried_object->taxonomy . '";',
+					'compare' => 'NOT LIKE',
+				);
+
+				$query->set( 'meta_query', $meta_query );
+			} elseif ( 'post' !== $q_post_type && is_archive( $q_post_type ) ) {
+				// Hide on cpt archive.
 				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
@@ -133,22 +143,6 @@ class Post_Hide {
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
-			// Hide on Tax.
-			if ( is_tax() ) {
-				$queried_object = get_queried_object();
-
-				$meta_query = (array) $query->get( 'meta_query' );
-				$meta_query = array_filter( $meta_query );
-
-				$meta_query[] = array(
-					'key'     => '_whp_hide_on_cpt_tax',
-					'value'   => ':"' . $queried_object->taxonomy . '";',
-					'compare' => 'NOT LIKE',
-				);
-
-				$query->set( 'meta_query', $meta_query );
-			}
-
 			// Hide on Authors.
 			if ( is_author() ) {
 				$query->set( 'meta_key', '_whp_hide_on_authors' );
@@ -168,13 +162,13 @@ class Post_Hide {
 			}
 
 			// Hide in Store.
-			if ( whp_wc_exists() && is_shop() ) {
+			if ( whp_plugin()->is_woocommerce_active() && is_shop() ) {
 				$query->set( 'meta_key', '_whp_hide_on_store' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
 			// Hide on Product categories.
-			if ( whp_wc_exists() && is_product_category() ) {
+			if ( whp_plugin()->is_woocommerce_active() && is_product_category() ) {
 				$query->set( 'meta_key', '_whp_hide_on_product_category' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
@@ -189,7 +183,7 @@ class Post_Hide {
 	 * @return  string
 	 */
 	public function hide_from_post_navigation( $where ) {
-		$hidden_on_post_navigation = whp_hidden_posts_ids( 'post', 'post_navigation' );
+		$hidden_on_post_navigation = whp_plugin()->get_hidden_posts_ids( 'post', 'post_navigation' );
 
 		if ( empty( $hidden_on_post_navigation ) ) {
 			return $where;
@@ -213,7 +207,7 @@ class Post_Hide {
 	 * @return  array
 	 */
 	public function hide_from_recent_post_widget( $query_args ) {
-		$hidden_on_recent_posts = whp_hidden_posts_ids( 'post', 'recent_posts' );
+		$hidden_on_recent_posts = whp_plugin()->get_hidden_posts_ids( 'post', 'recent_posts' );
 
 		if ( empty( $hidden_on_recent_posts ) ) {
 			return $query_args;

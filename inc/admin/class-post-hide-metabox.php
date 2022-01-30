@@ -31,7 +31,7 @@ class Post_Hide_Metabox {
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_assets' ) );
 
 		if ( ! $disable_hidden_on_column ) {
-			$enabled_post_types = whp_get_enabled_post_types();
+			$enabled_post_types = whp_plugin()->get_enabled_post_types();
 
 			foreach ( $enabled_post_types as $pt ) {
 				add_action( 'manage_' . $pt . '_posts_custom_column', array( $this, 'render_post_columns' ), 10, 2 );
@@ -79,6 +79,14 @@ class Post_Hide_Metabox {
 			array( 'jquery' ),
 			WHP_VERSION,
 			true
+		);
+
+		wp_localize_script(
+			'whp-admin-post-script',
+			'whpPlugin',
+			array(
+				'selectTaxonomyLabel' => __( 'Select Taxonomy', 'whp-hide-posts' ),
+			)
 		);
 
 		wp_enqueue_style(
@@ -315,10 +323,10 @@ class Post_Hide_Metabox {
 		$data['_whp_hide_on_post_navigation'] = ! empty( $_POST['whp_hide_on_post_navigation'] ) ? true : false;
 		$data['_whp_hide_on_recent_posts']    = ! empty( $_POST['whp_hide_on_recent_posts'] ) ? true : false;
 		$data['_whp_hide_on_cpt_archive']     = ! empty( $_POST['whp_hide_on_cpt_archive'] ) ? true : false;
-		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? $_POST['whp_hide_on_cpt_tax'] : false;
+		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? $_POST['whp_hide_on_cpt_tax'] : false; //phpcs:ignore
 		$data['_whp_hide_on_rest_api']        = ! empty( $_POST['whp_hide_on_rest_api'] ) ? true : false;
 
-		if ( whp_wc_exists() && whp_admin_wc_product() ) {
+		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$data['_whp_hide_on_store']            = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;
 			$data['_whp_hide_on_product_category'] = ! empty( $_POST['whp_hide_on_product_category'] ) ? true : false;
 		}
@@ -354,6 +362,7 @@ class Post_Hide_Metabox {
 			} else {
 				add_post_meta( $post_id, $key, $value );
 			}
+
 			if ( ! $value ) {
 				delete_post_meta( $post_id, $key );
 			}

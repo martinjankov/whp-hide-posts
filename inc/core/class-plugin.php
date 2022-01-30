@@ -109,8 +109,6 @@ class Plugin {
 
 		if ( is_array( $enabled_post_types ) ) {
 			$post_types = array_merge( $post_types, $enabled_post_types );
-		} else {
-			$post_type = array();
 		}
 
 		wp_cache_set( $key, $post_types, 'whp' );

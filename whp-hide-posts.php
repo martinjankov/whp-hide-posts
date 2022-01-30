@@ -1,30 +1,30 @@
 <?php
 /**
- * Plugin Name: Wordpress Hide Posts
+ * Plugin Name: WordPress Hide Posts
  * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommere products
  * Author:      MartinCV
  * Author URI:  https://www.martincv.com
  * Version:     1.0.0
  * Text Domain: whp-hide-posts
  *
- * Wordpress Hide Posts is free software: you can redistribute it and/or modify
+ * WordPress Hide Posts is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * Wordpress Hide Posts is distributed in the hope that it will be useful,
+ * WordPress Hide Posts is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WP Custom Page Number Per Page. If not, see <http://www.gnu.org/licenses/>.
+ * along with  WordPress Hide Posts. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    WordPressHidePosts
  * @author     MartinCV
  * @since      0.0.1
  * @license    GPL-3.0+
- * @copyright  Copyright (c) 2021, MartinCV
+ * @copyright  Copyright (c) 2022, MartinCV
  */
 
 // Exit if accessed directly.
@@ -35,11 +35,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Main class
  */
-final class WordpressHidePosts {
+final class WordPressHidePosts {
 	/**
 	 * Instance of the plugin
 	 *
-	 * @var WordpressHidePosts
+	 * @var WordPressHidePosts
 	 */
 	private static $instance;
 
@@ -48,16 +48,16 @@ final class WordpressHidePosts {
 	 *
 	 * @var string
 	 */
-	private $_version = '1.0.0';
+	private $version = '1.0.0';
 
 	/**
 	 * Instance of this plugin
 	 *
-	 * @return  WordpressHidePosts
+	 * @return  WordPressHidePosts
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WordpressHidePosts ) ) {
-			self::$instance = new WordpressHidePosts();
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WordPressHidePosts ) ) {
+			self::$instance = new WordPressHidePosts();
 			self::$instance->constants();
 			self::$instance->includes();
 
@@ -85,7 +85,7 @@ final class WordpressHidePosts {
 	private function constants() {
 		// Plugin version.
 		if ( ! defined( 'WHP_VERSION' ) ) {
-			define( 'WHP_VERSION', $this->_version );
+			define( 'WHP_VERSION', $this->version );
 		}
 
 		// Plugin Folder Path.
@@ -114,7 +114,7 @@ final class WordpressHidePosts {
 
 		// Init classes if is Admin/Dashboard.
 		if ( is_admin() ) {
-			\MartinCV\WHP\Admin\Admin_Dashboard::get_instance();
+			\MartinCV\WHP\Admin\Dashboard::get_instance();
 			\MartinCV\WHP\Admin\Post_Hide_Metabox::get_instance();
 		} else {
 			\MartinCV\WHP\Post_Hide::get_instance();
@@ -132,11 +132,11 @@ final class WordpressHidePosts {
 	}
 }
 
-WordpressHidePosts::instance();
+WordPressHidePosts::instance();
 
 if ( ! function_exists( 'whp_plugin' ) ) {
 	/**
-	 * Instance of the Plugin class
+	 * Instance of the Plugin class which holds helper functions
 	 *
 	 * @return \MartinCV\WHP\Core\Plugin
 	 */

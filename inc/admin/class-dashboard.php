@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Admin dashboard class
  */
-class Admin_Dashboard {
+class Dashboard {
 	use \MartinCV\WHP\Traits\Singleton;
 
 	/**
@@ -51,10 +51,10 @@ class Admin_Dashboard {
 	 */
 	public function settings() {
 		$post_types                   = get_post_types( array( 'public' => true ), 'object' );
-		$enabled_post_types           = whp_get_enabled_post_types();
-		$whp_disable_hidden_on_column = get_option( 'whp_disable_hidden_on_column' );
+		$enabled_post_types           = whp_plugin()->get_enabled_post_types();
+		$whp_disable_hidden_on_column = get_option( 'whp_disable_hidden_on_column', false );
 
-		include_once WHP_PLUGIN_DIR . 'views/admin/template-admin-dashboard.php';
+		require_once WHP_PLUGIN_DIR . 'views/admin/template-admin-dashboard.php';
 	}
 
 	/**

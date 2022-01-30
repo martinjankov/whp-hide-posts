@@ -5,7 +5,7 @@
 		$("#whp_hide_on_cpt_tax").select2({
 			multiple: true,
 			width: "100%",
-			placeholder: "Select Taxonomy",
+			placeholder: whpPlugin.selectTaxonomyLabel,
 		});
 
 		if ($selectAll.length == 0) {
