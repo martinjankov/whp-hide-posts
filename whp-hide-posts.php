@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WordPress Hide Posts
- * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommere products
+ * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommerce products
  * Author:      MartinCV
  * Author URI:  https://www.martincv.com
  * Version:     1.0.0
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with  WordPress Hide Posts. If not, see <http://www.gnu.org/licenses/>.
+ * along with WordPress Hide Posts. If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    WordPressHidePosts
  * @author     MartinCV
