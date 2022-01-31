@@ -318,8 +318,8 @@ class Post_Hide_Metabox {
 		$data['_whp_hide_on_rest_api']        = ! empty( $args['whp_hide_on_rest_api'] ) ? true : false;
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
-			$data['_whp_hide_on_store']            = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;
-			$data['_whp_hide_on_product_category'] = ! empty( $_POST['whp_hide_on_product_category'] ) ? true : false;
+			$data['_whp_hide_on_store']            = ! empty( $args['whp_hide_on_store'] ) ? true : false;
+			$data['_whp_hide_on_product_category'] = ! empty( $args['whp_hide_on_product_category'] ) ? true : false;
 		}
 
 		// Sanitize inputs.
