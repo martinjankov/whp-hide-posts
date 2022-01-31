@@ -58,21 +58,6 @@ class Post_Hide_Metabox {
 			return;
 		}
 
-		wp_enqueue_style(
-			'whp-select2',
-			WHP_PLUGIN_URL . 'assets/libs/select2/css/select2.min.css',
-			array(),
-			WHP_VERSION
-		);
-
-		wp_enqueue_script(
-			'whp-select2',
-			WHP_PLUGIN_URL . 'assets/libs/select2/js/select2.min.js',
-			array( 'jquery' ),
-			WHP_VERSION,
-			true
-		);
-
 		wp_enqueue_script(
 			'whp-admin-post-script',
 			WHP_PLUGIN_URL . 'assets/admin/js/whp-script.js',

@@ -2,12 +2,6 @@
 	$(function () {
 		const $selectAll = $("#whp_select_all");
 
-		$("#whp_hide_on_cpt_tax").select2({
-			multiple: true,
-			width: "100%",
-			placeholder: whpPlugin.selectTaxonomyLabel,
-		});
-
 		if ($selectAll.length == 0) {
 			return;
 		}
