@@ -112,13 +112,14 @@ final class WordPressHidePosts {
 	public function run() {
 		$this->load_textdomain();
 
+		\MartinCV\WHP\Zeen_Theme::get_instance();
+
 		// Init classes if is Admin/Dashboard.
 		if ( is_admin() ) {
 			\MartinCV\WHP\Admin\Dashboard::get_instance();
 			\MartinCV\WHP\Admin\Post_Hide_Metabox::get_instance();
 		} else {
 			\MartinCV\WHP\Post_Hide::get_instance();
-			\MartinCV\WHP\Zeen_Theme::get_instance();
 		}
 	}
 
