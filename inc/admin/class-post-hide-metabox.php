@@ -154,7 +154,7 @@ class Post_Hide_Metabox {
 		$whp_hide_on_post_navigation = get_post_meta( $post_id, '_whp_hide_on_post_navigation', true );
 		$whp_hide_on_recent_posts    = get_post_meta( $post_id, '_whp_hide_on_recent_posts', true );
 		$whp_hide_on_cpt_archive     = get_post_meta( $post_id, '_whp_hide_on_cpt_archive', true );
-		$whp_hide_on_cpt_tax         = get_post_meta( $post_id, '_whp_hide_on_cpt_tax', true );
+		$whp_hide_on_archive         = get_post_meta( $post_id, '_whp_hide_on_archive', true );
 		$whp_hide_on_rest_api        = get_post_meta( $post_id, '_whp_hide_on_rest_api', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
@@ -166,6 +166,10 @@ class Post_Hide_Metabox {
 
 		if ( $whp_hide_on_frontpage ) {
 			$whp_hide_on .= __( 'Front / Home page', 'whp-hide-posts' ) . ', ';
+		}
+
+		if ( $whp_hide_on_archive ) {
+			$whp_hide_on .= __( 'Archives', 'whp-hide-posts' ) . ', ';
 		}
 
 		if ( $whp_hide_on_categories ) {
@@ -208,10 +212,6 @@ class Post_Hide_Metabox {
 			$whp_hide_on .= __( 'CPT Archive page', 'whp-hide-posts' ) . ', ';
 		}
 
-		if ( $whp_hide_on_cpt_tax ) {
-			$whp_hide_on .= __( 'CPT tax page', 'whp-hide-posts' ) . ', ';
-		}
-
 		if ( $whp_hide_on_rest_api ) {
 			$whp_hide_on .= __( 'REST API', 'whp-hide-posts' ) . ', ';
 		}
@@ -252,7 +252,7 @@ class Post_Hide_Metabox {
 		$whp_hide_on_post_navigation = get_post_meta( $post->ID, '_whp_hide_on_post_navigation', true );
 		$whp_hide_on_recent_posts    = get_post_meta( $post->ID, '_whp_hide_on_recent_posts', true );
 		$whp_hide_on_cpt_archive     = get_post_meta( $post->ID, '_whp_hide_on_cpt_archive', true );
-		$whp_hide_on_cpt_tax         = get_post_meta( $post->ID, '_whp_hide_on_cpt_tax', true );
+		$whp_hide_on_archive         = get_post_meta( $post->ID, '_whp_hide_on_archive', true );
 		$whp_hide_on_rest_api        = get_post_meta( $post->ID, '_whp_hide_on_rest_api', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
@@ -261,17 +261,6 @@ class Post_Hide_Metabox {
 		}
 
 		$enabled_post_types = whp_plugin()->get_enabled_post_types();
-
-		$taxonomies = get_object_taxonomies( $post );
-
-		$built_in = \MartinCV\WHP\Core\Constants::BUILT_IN_TAXONOMIES;
-
-		$taxonomies = array_filter(
-			$taxonomies,
-			function( $taxonomy ) use ( $built_in ) {
-				return ! in_array( $taxonomy, $built_in, true );
-			}
-		);
 
 		require_once WHP_PLUGIN_DIR . 'views/admin/template-admin-post-metabox.php';
 	}
@@ -311,20 +300,22 @@ class Post_Hide_Metabox {
 			return $post_id;
 		}
 
+		$args = $_POST;
+
 		// Data to be stored in the database.
-		$data['_whp_hide_on_frontpage']       = ! empty( $_POST['whp_hide_on_frontpage'] ) ? true : false;
-		$data['_whp_hide_on_categories']      = ! empty( $_POST['whp_hide_on_categories'] ) ? true : false;
-		$data['_whp_hide_on_search']          = ! empty( $_POST['whp_hide_on_search'] ) ? true : false;
-		$data['_whp_hide_on_tags']            = ! empty( $_POST['whp_hide_on_tags'] ) ? true : false;
-		$data['_whp_hide_on_authors']         = ! empty( $_POST['whp_hide_on_authors'] ) ? true : false;
-		$data['_whp_hide_in_rss_feed']        = ! empty( $_POST['whp_hide_in_rss_feed'] ) ? true : false;
-		$data['_whp_hide_on_blog_page']       = ! empty( $_POST['whp_hide_on_blog_page'] ) ? true : false;
-		$data['_whp_hide_on_date']            = ! empty( $_POST['whp_hide_on_date'] ) ? true : false;
-		$data['_whp_hide_on_post_navigation'] = ! empty( $_POST['whp_hide_on_post_navigation'] ) ? true : false;
-		$data['_whp_hide_on_recent_posts']    = ! empty( $_POST['whp_hide_on_recent_posts'] ) ? true : false;
-		$data['_whp_hide_on_cpt_archive']     = ! empty( $_POST['whp_hide_on_cpt_archive'] ) ? true : false;
-		$data['_whp_hide_on_cpt_tax']         = ! empty( $_POST['whp_hide_on_cpt_tax'] ) ? $_POST['whp_hide_on_cpt_tax'] : false; //phpcs:ignore
-		$data['_whp_hide_on_rest_api']        = ! empty( $_POST['whp_hide_on_rest_api'] ) ? true : false;
+		$data['_whp_hide_on_frontpage']       = ! empty( $args['whp_hide_on_frontpage'] ) ? true : false;
+		$data['_whp_hide_on_categories']      = ! empty( $args['whp_hide_on_categories'] ) ? true : false;
+		$data['_whp_hide_on_search']          = ! empty( $args['whp_hide_on_search'] ) ? true : false;
+		$data['_whp_hide_on_tags']            = ! empty( $args['whp_hide_on_tags'] ) ? true : false;
+		$data['_whp_hide_on_authors']         = ! empty( $args['whp_hide_on_authors'] ) ? true : false;
+		$data['_whp_hide_in_rss_feed']        = ! empty( $args['whp_hide_in_rss_feed'] ) ? true : false;
+		$data['_whp_hide_on_blog_page']       = ! empty( $args['whp_hide_on_blog_page'] ) ? true : false;
+		$data['_whp_hide_on_date']            = ! empty( $args['whp_hide_on_date'] ) ? true : false;
+		$data['_whp_hide_on_post_navigation'] = ! empty( $args['whp_hide_on_post_navigation'] ) ? true : false;
+		$data['_whp_hide_on_recent_posts']    = ! empty( $args['whp_hide_on_recent_posts'] ) ? true : false;
+		$data['_whp_hide_on_archive']         = ! empty( $args['whp_hide_on_archive'] ) ? true : false;
+		$data['_whp_hide_on_cpt_archive']     = ! empty( $args['whp_hide_on_cpt_archive'] ) ? true : false;
+		$data['_whp_hide_on_rest_api']        = ! empty( $args['whp_hide_on_rest_api'] ) ? true : false;
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
 			$data['_whp_hide_on_store']            = ! empty( $_POST['whp_hide_on_store'] ) ? true : false;

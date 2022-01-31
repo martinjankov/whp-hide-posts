@@ -65,21 +65,19 @@ class Plugin {
 			return $hidden_posts;
 		}
 
-		$operator = '=';
-
 		$key = Constants::HIDDEN_POSTS_KEYS_LIST[ $from ] ?? false;
 
 		if ( ! $key ) {
 			return array();
 		}
 
-		if ( 'all' === $key ) {
-			$operator = 'LIKE';
-		}
-
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key {$operator} %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+		$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+
+		if ( 'all' === $key ) {
+			$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key LIKE %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+		}
 
 		$hidden_posts = $wpdb->get_col( $sql );
 

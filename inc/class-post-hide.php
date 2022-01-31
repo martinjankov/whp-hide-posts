@@ -105,23 +105,13 @@ class Post_Hide {
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
-			// Hide on Tax.
-			if ( is_tax() ) {
-				$queried_object = get_queried_object();
-
-				$meta_query = (array) $query->get( 'meta_query' );
-				$meta_query = array_filter( $meta_query );
-
-				$meta_query[] = array(
-					'key'     => '_whp_hide_on_cpt_tax',
-					'value'   => ':"' . $queried_object->taxonomy . '";',
-					'compare' => 'NOT LIKE',
-				);
-
-				$query->set( 'meta_query', $meta_query );
-			} elseif ( 'post' !== $q_post_type && is_archive( $q_post_type ) ) {
-				// Hide on cpt archive.
+			// Hide on cpt archive.
+			if ( is_post_type_archive( $q_post_type ) ) {
 				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			} elseif ( is_archive( $q_post_type ) ) {
+				// Hide on Archive.
+				$query->set( 'meta_key', '_whp_hide_on_archive' );
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 
@@ -173,6 +163,8 @@ class Post_Hide {
 				$query->set( 'meta_compare', 'NOT EXISTS' );
 			}
 		}
+
+		// echo '<pre>' . print_r( $query, true ) . '</pre>'; die;
 	}
 
 	/**
@@ -194,7 +186,7 @@ class Post_Hide {
 
 		global $wpdb;
 
-		$where .= $wpdb->prepare( " AND ID NOT IN ( $ids_placeholders )", ...$hidden_on_post_navigation ); //phpcs:ignore
+		$where .= $wpdb->prepare( " AND ID NOT IN ( $ids_placeholders )", ...$hidden_on_post_navigation );
 
 		return $where;
 	}

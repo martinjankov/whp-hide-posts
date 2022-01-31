@@ -1,22 +1,20 @@
 === WordPress Hide Posts ===
 Contributors: martin7ba
-Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed
+Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed, rest api
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-This plugin allows you to hide any posts on the home page, category page, search page, tags page, authors page and RSS Feed
+This plugin allows you to hide any posts on the home page, category page, search page, tags page, authors page, RSS Feed, REST API, Post Navigation and Native Recent Posts Widget.
+
 Also you can hide Woocommerce products from Shop page as well as from Product category pages.
 
+It has option to hide custom post types on their archive or any other page.
+
 To enable it for Woocommerce products or any other Custom Post type go to Settings -> Hide Posts and select the post type.
-
-When you create new or edit post, you can choose on which archive page to hide that post as well as on the home page.
-
-NOTE: The option to hide post from REST API added in version 0.4.3 is now removed in version 0.5 due to conflict with Guttenberg save / update post funcionality.
-It will stay removed until a permanent fix is found for this issue.
 
 == Installation ==
 
@@ -27,11 +25,11 @@ It will stay removed until a permanent fix is found for this issue.
 == Changelog ==
 
 = 1.0.0 =
-_Release Date - 23 March 2021_
+_Release Date - 07 February 2022_
 
 - Code base optimized and refactored
 - Added option to hide CPT on their own archive page
-- Added option to hide any post type on any taxonomy or custom taxonomy
+- Added option to hide any post type on archive page other than category, tag. Ex: Custom Taxonomy archive page.
 - Added option to hide posts on the default WordPress Recent Posts Widget
 - Added option to hide posts in REST API calls
 

@@ -58,6 +58,12 @@
 		</label>
 	</p>
 	<p>
+		<label for='whp_hide_on_archive'>
+			<input type='checkbox' name="whp_hide_on_archive" value='1' <?php checked( $whp_hide_on_archive, 1 ); ?> id='whp_hide_on_archive'>
+			<?php esc_html_e( 'Hide on archive page', 'whp-hide-posts' ); ?>
+		</label>
+	</p>
+	<p>
 		<label for='whp_hide_in_rss_feed'>
 			<input type='checkbox' name="whp_hide_in_rss_feed" value='1' <?php checked( $whp_hide_in_rss_feed, 1 ); ?> id='whp_hide_in_rss_feed'>
 			<?php esc_html_e( 'Hide in RSS Feed', 'whp-hide-posts' ); ?>
@@ -100,20 +106,6 @@
 			<label for='whp_hide_on_product_category'>
 				<input type='checkbox' name="whp_hide_on_product_category" value='1' <?php checked( $whp_hide_on_product_category, 1 ); ?> id='whp_hide_on_product_category'>
 				<?php esc_html_e( 'Hide on product category page', 'whp-hide-posts' ); ?>
-			</label>
-		</p>
-	<?php endif; ?>
-	<?php if ( ! empty( $taxonomies ) ) : ?>
-		<p>
-			<label for='whp_hide_on_cpt_tax'>
-				<?php esc_html_e( 'Hide on tax:', 'whp-hide-posts' ); ?>
-				<select name="whp_hide_on_cpt_tax[]" id="whp_hide_on_cpt_tax" multiple>
-					<?php foreach ( $taxonomies as $wp_tax ) : ?>
-						<option value="<?php echo esc_attr( $wp_tax ); ?>" <?php is_array( $whp_hide_on_cpt_tax ) && selected( in_array( $wp_tax, $whp_hide_on_cpt_tax, true ), 1 ); ?>>
-							<?php echo esc_html( ucfirst( str_replace( '_', ' ', $wp_tax ) ) ); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
 			</label>
 		</p>
 	<?php endif; ?>
