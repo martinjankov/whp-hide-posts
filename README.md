@@ -32,6 +32,7 @@ _Release Date - 07 February 2022_
 - Added option to hide any post type on archive page other than category, tag. Ex: Custom Taxonomy archive page.
 - Added option to hide posts on the default WordPress Recent Posts Widget
 - Added option to hide posts in REST API calls
+- Added option to hide Woocommerce Products in REST API calls
 
 = 0.5.3 =
 _Release Date - 15 August 2020_

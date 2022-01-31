@@ -42,6 +42,7 @@ class Post_Hide {
 		foreach ( $this->enabled_post_types as $pt ) {
 			add_filter( "rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
 			add_filter( "woocommerce_rest_{$pt}_object_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
+			add_filter( "woocommerce_rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
 		}
 	}
 
