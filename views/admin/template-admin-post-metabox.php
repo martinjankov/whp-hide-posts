@@ -61,6 +61,7 @@
 		<label for='whp_hide_on_archive'>
 			<input type='checkbox' name="whp_hide_on_archive" value='1' <?php checked( $whp_hide_on_archive, 1 ); ?> id='whp_hide_on_archive'>
 			<?php esc_html_e( 'Hide on archive page', 'whp-hide-posts' ); ?>
+			<em><?php esc_html_e( '(This includes any custom taxonomy archive pages)', 'whp-hide-posts' ); ?></em>
 		</label>
 	</p>
 	<p>

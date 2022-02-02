@@ -1,38 +1,83 @@
 === WordPress Hide Posts ===
 Contributors: martin7ba
-Tags: hide posts, hide, show, visibility, filter, woocommerce, hide products, rss feed, rest api
+Donate link: https://www.martincv.com/donate
+Tags: hide posts, hide, show, visibility, hide products, rss feed, rest api
 Requires at least: 5.0
 Tested up to: 5.9
-Requires PHP: 7.4
+Requires PHP: 7.3
 Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
+== Description ==
+
 This plugin allows you to hide any posts on the home page, category page, search page, tags page, authors page, RSS Feed, REST API, Post Navigation and Native Recent Posts Widget.
 
-Also you can hide Woocommerce products from Shop page as well as from Product category pages.
+[Try the Demo](https://codecanyon.net/demo.tastewp.com/whp-hide-posts "Demo")
 
-It has option to hide custom post types on their archive or any other page.
+= Features: =
 
-To enable it for Woocommerce products or any other Custom Post type go to Settings -> Hide Posts and select the post type.
+- Users can choose to hide specific posts on specific archives and pages in WordPress as well in RSS Feed and REST API.
+- Users can enable the option to show the hide functionality on Custom Post Types and hide those Custom Post Type posts on any archive and pages.
+- Users can hide Woocommerce products in product categories and on the store page as well as hide products fetched by Woocommerce REST API.
 
 == Installation ==
 
-1. Upload the `whp-hide-posts` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Enable Hide post functionality for additional post types by going to Settings -> Hide Posts
+Installation and uninstallation are extremely simple. You can use WordPress' automatic install or follow the manual instructions below.
+
+= Installing: =
+
+1. Download the package.
+2. Extract it to the "plugins" folder of your WordPress directory.
+3. In the Admin Panel, go to "Plugins" and activate it.
+4. Go to Settings -> Hide Posts to enable the hide functionality for additional post types beside 'post'.
+
+= Uninstalling: =
+
+1. In the Admin Panel, go to "Plugins", deactivate the plugin and click "Delete".
+
+= Usage: =
+
+Using this plugin is simple. Once it has been activated, navigate to Settings -> Hide Posts and select additional post types for which
+you want to use the Hide functionality. The functionality is enabled by default for 'Posts' and cannot be disabled for that type post.
+
+If you need any additional help fell free to contact me at martin@martincv.com for more information.
+
+== Frequently Asked Questions ==
+
+= This plugin saved me a lot of work. Where can I donate? =
+
+Thanks, donations help us to continue improving our plugins. [Read More About Donations.](https://www.martincv.com/donate/)
+
+= I want to migrate from other hide posts plugin to WordPress Hide Posts plugin =
+
+This is possible. This functionality is not free. You can contact me at [martin@martincv.com](mailto:martin@martincv.com) for more information and send the name of the plugin you want to migrate from.
+
+== Screenshots ==
+
+1. The Settings screen for the plugin.
+
+2. The Hide Posts options in the Add / Edit post screen.
+
+3. Post Lists table 'Hidden on' column.
 
 == Changelog ==
 
 = 1.0.0 =
 _Release Date - 07 February 2022_
 
-- Code base optimized and refactored
-- Added option to hide CPT on their own archive page
+- Code base optimized and refactored.
+- Added option to hide CPT on their own archive page.
 - Added option to hide any post type on archive page other than category, tag. Ex: Custom Taxonomy archive page.
+- Added option to hide posts in REST API calls.
+- Added option to hide Woocommerce Products in REST API calls.
+
+= 0.5.4 =
+_Release Date - 26 December 2021_
+
 - Added option to hide posts on the default WordPress Recent Posts Widget
-- Added option to hide posts in REST API calls
-- Added option to hide Woocommerce Products in REST API calls
+  (NOTE: This option will not work on the Latest Posts Gutenberg block. The feature can be tracked here [core.trac.wordpress.org/ticket/54580](https://core.trac.wordpress.org/ticket/54580))
+- Added compatibility with Zeen Theme Load More functionality
 
 = 0.5.3 =
 _Release Date - 15 August 2020_
