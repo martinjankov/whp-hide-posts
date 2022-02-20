@@ -40,9 +40,12 @@ class Post_Hide {
 		add_filter( 'widget_posts_args', array( $this, 'hide_from_recent_post_widget' ), 10, 1 );
 
 		foreach ( $this->enabled_post_types as $pt ) {
-			add_filter( "rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
-			add_filter( "woocommerce_rest_{$pt}_object_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
-			add_filter( "woocommerce_rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
+			if ( 'product' !== $pt ) {
+				add_filter( "rest_{$pt}_query", array( $this, 'hide_from_rest_api' ), 10, 2 );
+			} else {
+				add_filter( 'woocommerce_rest_product_object_query', array( $this, 'hide_from_rest_api' ), 10, 2 );
+				add_filter( 'woocommerce_rest_product_query', array( $this, 'hide_from_rest_api' ), 10, 2 );
+			}
 		}
 	}
 
@@ -55,6 +58,10 @@ class Post_Hide {
 	 * @return array
 	 */
 	public function hide_from_rest_api( $args, $request ) {
+		if ( ! in_array( $args['post_type'], $this->enabled_post_types, true ) ) {
+			return $args;
+		}
+
 		$hidden_ids = whp_plugin()->get_hidden_posts_ids( $args['post_type'], 'rest_api' );
 
 		if ( ! empty( $hidden_ids ) ) {

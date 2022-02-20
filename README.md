@@ -1,11 +1,11 @@
 === WordPress Hide Posts ===
 Contributors: martin7ba
-Donate link: https://www.martincv.com/donate
+Donate link: https://www.martincv.com/whp-donate
 Tags: hide posts, hide, show, visibility, hide products, rss feed, rest api
 Requires at least: 5.0
 Tested up to: 5.9
 Requires PHP: 7.3
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 This plugin allows you to hide any posts on the home page, category page, search page, tags page, authors page, RSS Feed, REST API, Post Navigation and Native Recent Posts Widget.
 
-[Try the Demo](https://codecanyon.net/demo.tastewp.com/whp-hide-posts "Demo")
+[Try the Demo](https://demo.tastewp.com/whp-hide-posts "Demo")
 
 = Features: =
 
@@ -41,13 +41,13 @@ Installation and uninstallation are extremely simple. You can use WordPress' aut
 Using this plugin is simple. Once it has been activated, navigate to Settings -> Hide Posts and select additional post types for which
 you want to use the Hide functionality. The functionality is enabled by default for 'Posts' and cannot be disabled for that type post.
 
-If you need any additional help fell free to contact me at martin@martincv.com for more information.
+If you need any additional help fell free to contact me at [martin@martincv.com](mailto:martin@martincv.com) for more information.
 
 == Frequently Asked Questions ==
 
 = This plugin saved me a lot of work. Where can I donate? =
 
-Thanks, donations help us to continue improving our plugins. [Read More About Donations.](https://www.martincv.com/donate/)
+Thanks, donations help us to continue improving our plugins. [Read More About Donations.](https://www.martincv.com/whp-donate/)
 
 = I want to migrate from other hide posts plugin to WordPress Hide Posts plugin =
 
@@ -62,6 +62,16 @@ This is possible. This functionality is not free. You can contact me at [martin@
 3. Post Lists table 'Hidden on' column.
 
 == Changelog ==
+
+= 1.0.2 =
+_Release Date - 20 February 2022_
+
+- Hide WooCommerce Product from REST API bug fix.
+
+= 1.0.1 =
+_Release Date - 13 February 2022_
+
+- Bug fix. Added check for enabled post type for REST API Hide.
 
 = 1.0.0 =
 _Release Date - 07 February 2022_
