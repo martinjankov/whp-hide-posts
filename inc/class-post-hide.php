@@ -97,13 +97,18 @@ class Post_Hide {
 	public function exclude_posts( $query ) {
 		$q_post_type = $query->get( 'post_type' );
 
-		if ( ! is_admin() || ( is_admin() && wp_doing_ajax() ) &&
+		if ( ( ! is_admin() || ( is_admin() && wp_doing_ajax() ) ) &&
 			(
 				empty( $query->get( 'post_type' ) ) ||
 				( ! is_array( $q_post_type ) && in_array( $q_post_type, $this->enabled_post_types, true ) ) ||
 				( is_array( $q_post_type ) && ! empty( array_intersect( $q_post_type, $this->enabled_post_types ) ) )
 			)
 		) {
+			if ( is_singular( $q_post_type ) && ! $query->is_main_query() ) {
+				$query->set( 'meta_key', '_whp_hide_on_single_post_page' );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
+
 			// Hide on homepage.
 			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
 				$query->set( 'meta_key', '_whp_hide_on_frontpage' );

@@ -95,6 +95,13 @@
 			<?php esc_html_e( 'Hide from REST API', 'whp-hide-posts' ); ?>
 		</label>
 	</p>
+	<p>
+		<label for='whp_hide_on_single_post_page'>
+			<input type='checkbox' name="whp_hide_on_single_post_page" value='1' <?php checked( $whp_hide_on_single_post_page, 1 ); ?> id='whp_hide_on_single_post_page'>
+			<?php esc_html_e( 'Hide on single post page', 'whp-hide-posts' ); ?>
+			<em><?php esc_html_e( '(This will hide post from recent posts, related posts and any other widget shown on the single post page)', 'whp-hide-posts' ); ?></em>
+		</label>
+	</p>
 	<?php if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) : ?>
 		<h4><?php esc_html_e( 'Woocommerce options', 'whp-hide-posts' ); ?></h4>
 		<p>

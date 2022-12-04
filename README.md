@@ -3,9 +3,9 @@ Contributors: martin7ba
 Donate link: https://www.martincv.com/whp-donate
 Tags: hide posts, hide, show, visibility, hide products, rss feed, rest api
 Requires at least: 5.0
-Tested up to: 5.9
+Tested up to: 6.1
 Requires PHP: 7.3
-Stable tag: 1.0.2
+Stable tag: 1.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,6 +62,21 @@ This is possible. This functionality is not free. You can contact me at [martin@
 3. Post Lists table 'Hidden on' column.
 
 == Changelog ==
+
+= 1.1.1 =
+_Release Date - 05 October 2022_
+
+- Bug fix related to checkbox not checked when enabling Hide posts on signle post page.
+
+= 1.1.0 =
+_Release Date - 02 September 2022_
+
+- Added option to hide posts on the single post page. This option will hide posts shown in any widget, block (related posts, recent posts etc) on the single post page.
+
+= 1.0.3 =
+_Release Date - 01 September 2022_
+
+- Bug fix with conditional logic on when to modify meta query.
 
 = 1.0.2 =
 _Release Date - 20 February 2022_
