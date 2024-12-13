@@ -12,5 +12,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'whp_enabled_post_types' );
 
 global $wpdb;
-$query = "DELETE FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '_whp_hide_on_%'";
-$wpdb->query( $query );
+$table_name = $wpdb->prefix . 'whp_posts_visibility';
+$wpdb->query( "DELETE FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '_whp_hide_on_%'" );
+$wpdb->query( "DROP TABLE IF EXISTS $table_name" );

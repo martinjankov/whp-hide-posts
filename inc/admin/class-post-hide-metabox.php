@@ -128,24 +128,24 @@ class Post_Hide_Metabox {
 			return;
 		}
 
-		$whp_hide_on_frontpage        = get_post_meta( $post_id, '_whp_hide_on_frontpage', true );
-		$whp_hide_on_categories       = get_post_meta( $post_id, '_whp_hide_on_categories', true );
-		$whp_hide_on_search           = get_post_meta( $post_id, '_whp_hide_on_search', true );
-		$whp_hide_on_tags             = get_post_meta( $post_id, '_whp_hide_on_tags', true );
-		$whp_hide_on_authors          = get_post_meta( $post_id, '_whp_hide_on_authors', true );
-		$whp_hide_in_rss_feed         = get_post_meta( $post_id, '_whp_hide_in_rss_feed', true );
-		$whp_hide_on_blog_page        = get_post_meta( $post_id, '_whp_hide_on_blog_page', true );
-		$whp_hide_on_date             = get_post_meta( $post_id, '_whp_hide_on_date', true );
-		$whp_hide_on_post_navigation  = get_post_meta( $post_id, '_whp_hide_on_post_navigation', true );
-		$whp_hide_on_recent_posts     = get_post_meta( $post_id, '_whp_hide_on_recent_posts', true );
-		$whp_hide_on_cpt_archive      = get_post_meta( $post_id, '_whp_hide_on_cpt_archive', true );
-		$whp_hide_on_archive          = get_post_meta( $post_id, '_whp_hide_on_archive', true );
-		$whp_hide_on_rest_api         = get_post_meta( $post_id, '_whp_hide_on_rest_api', true );
-		$whp_hide_on_single_post_page = get_post_meta( $post_id, '_whp_hide_on_single_post_page', true );
+		$whp_hide_on_frontpage        = whp_plugin()->get_whp_meta( $post_id, 'hide_on_frontpage', true  );
+		$whp_hide_on_categories       = whp_plugin()->get_whp_meta( $post_id, 'hide_on_categories', true  );
+		$whp_hide_on_search           = whp_plugin()->get_whp_meta( $post_id, 'hide_on_search', true  );
+		$whp_hide_on_tags             = whp_plugin()->get_whp_meta( $post_id, 'hide_on_tags', true  );
+		$whp_hide_on_authors          = whp_plugin()->get_whp_meta( $post_id, 'hide_on_authors', true  );
+		$whp_hide_in_rss_feed         = whp_plugin()->get_whp_meta( $post_id, 'hide_in_rss_feed', true  );
+		$whp_hide_on_blog_page        = whp_plugin()->get_whp_meta( $post_id, 'hide_on_blog_page', true  );
+		$whp_hide_on_date             = whp_plugin()->get_whp_meta( $post_id, 'hide_on_date', true  );
+		$whp_hide_on_post_navigation  = whp_plugin()->get_whp_meta( $post_id, 'hide_on_post_navigation', true  );
+		$whp_hide_on_recent_posts     = whp_plugin()->get_whp_meta( $post_id, 'hide_on_recent_posts', true  );
+		$whp_hide_on_cpt_archive      = whp_plugin()->get_whp_meta( $post_id, 'hide_on_cpt_archive', true  );
+		$whp_hide_on_archive          = whp_plugin()->get_whp_meta( $post_id, 'hide_on_archive', true  );
+		$whp_hide_on_rest_api         = whp_plugin()->get_whp_meta( $post_id, 'hide_on_rest_api', true  );
+		$whp_hide_on_single_post_page = whp_plugin()->get_whp_meta( $post_id, 'hide_on_single_post_page', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
-			$whp_hide_on_store            = get_post_meta( $post_id, '_whp_hide_on_store', true );
-			$whp_hide_on_product_category = get_post_meta( $post_id, '_whp_hide_on_product_category', true );
+			$whp_hide_on_store            = whp_plugin()->get_whp_meta( $post_id, 'hide_on_store', true );
+			$whp_hide_on_product_category = whp_plugin()->get_whp_meta( $post_id, 'hide_on_product_category', true );
 		}
 
 		$whp_hide_on = '';
@@ -231,24 +231,26 @@ class Post_Hide_Metabox {
 	public function metabox_callback( $post ) {
 		wp_nonce_field( 'wp_metabox_nonce', 'wp_metabox_nonce_value' );
 
-		$whp_hide_on_frontpage        = get_post_meta( $post->ID, '_whp_hide_on_frontpage', true );
-		$whp_hide_on_categories       = get_post_meta( $post->ID, '_whp_hide_on_categories', true );
-		$whp_hide_on_search           = get_post_meta( $post->ID, '_whp_hide_on_search', true );
-		$whp_hide_on_tags             = get_post_meta( $post->ID, '_whp_hide_on_tags', true );
-		$whp_hide_on_authors          = get_post_meta( $post->ID, '_whp_hide_on_authors', true );
-		$whp_hide_in_rss_feed         = get_post_meta( $post->ID, '_whp_hide_in_rss_feed', true );
-		$whp_hide_on_blog_page        = get_post_meta( $post->ID, '_whp_hide_on_blog_page', true );
-		$whp_hide_on_date             = get_post_meta( $post->ID, '_whp_hide_on_date', true );
-		$whp_hide_on_post_navigation  = get_post_meta( $post->ID, '_whp_hide_on_post_navigation', true );
-		$whp_hide_on_recent_posts     = get_post_meta( $post->ID, '_whp_hide_on_recent_posts', true );
-		$whp_hide_on_cpt_archive      = get_post_meta( $post->ID, '_whp_hide_on_cpt_archive', true );
-		$whp_hide_on_archive          = get_post_meta( $post->ID, '_whp_hide_on_archive', true );
-		$whp_hide_on_rest_api         = get_post_meta( $post->ID, '_whp_hide_on_rest_api', true );
-		$whp_hide_on_single_post_page = get_post_meta( $post->ID, '_whp_hide_on_single_post_page', true );
+		$post_id = $post->ID;
+
+		$whp_hide_on_frontpage        = whp_plugin()->get_whp_meta( $post_id, 'hide_on_frontpage', true  );
+		$whp_hide_on_categories       = whp_plugin()->get_whp_meta( $post_id, 'hide_on_categories', true  );
+		$whp_hide_on_search           = whp_plugin()->get_whp_meta( $post_id, 'hide_on_search', true  );
+		$whp_hide_on_tags             = whp_plugin()->get_whp_meta( $post_id, 'hide_on_tags', true  );
+		$whp_hide_on_authors          = whp_plugin()->get_whp_meta( $post_id, 'hide_on_authors', true  );
+		$whp_hide_in_rss_feed         = whp_plugin()->get_whp_meta( $post_id, 'hide_in_rss_feed', true  );
+		$whp_hide_on_blog_page        = whp_plugin()->get_whp_meta( $post_id, 'hide_on_blog_page', true  );
+		$whp_hide_on_date             = whp_plugin()->get_whp_meta( $post_id, 'hide_on_date', true  );
+		$whp_hide_on_post_navigation  = whp_plugin()->get_whp_meta( $post_id, 'hide_on_post_navigation', true  );
+		$whp_hide_on_recent_posts     = whp_plugin()->get_whp_meta( $post_id, 'hide_on_recent_posts', true  );
+		$whp_hide_on_cpt_archive      = whp_plugin()->get_whp_meta( $post_id, 'hide_on_cpt_archive', true  );
+		$whp_hide_on_archive          = whp_plugin()->get_whp_meta( $post_id, 'hide_on_archive', true  );
+		$whp_hide_on_rest_api         = whp_plugin()->get_whp_meta( $post_id, 'hide_on_rest_api', true  );
+		$whp_hide_on_single_post_page = whp_plugin()->get_whp_meta( $post_id, 'hide_on_single_post_page', true );
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
-			$whp_hide_on_store            = get_post_meta( $post->ID, '_whp_hide_on_store', true );
-			$whp_hide_on_product_category = get_post_meta( $post->ID, '_whp_hide_on_product_category', true );
+			$whp_hide_on_store            = whp_plugin()->get_whp_meta( $post_id, 'hide_on_store', true );
+			$whp_hide_on_product_category = whp_plugin()->get_whp_meta( $post_id, 'hide_on_product_category', true );
 		}
 
 		$enabled_post_types = whp_plugin()->get_enabled_post_types();
@@ -294,24 +296,24 @@ class Post_Hide_Metabox {
 		$args = $_POST;
 
 		// Data to be stored in the database.
-		$data['_whp_hide_on_frontpage']        = ! empty( $args['whp_hide_on_frontpage'] ) ? true : false;
-		$data['_whp_hide_on_categories']       = ! empty( $args['whp_hide_on_categories'] ) ? true : false;
-		$data['_whp_hide_on_search']           = ! empty( $args['whp_hide_on_search'] ) ? true : false;
-		$data['_whp_hide_on_tags']             = ! empty( $args['whp_hide_on_tags'] ) ? true : false;
-		$data['_whp_hide_on_authors']          = ! empty( $args['whp_hide_on_authors'] ) ? true : false;
-		$data['_whp_hide_in_rss_feed']         = ! empty( $args['whp_hide_in_rss_feed'] ) ? true : false;
-		$data['_whp_hide_on_blog_page']        = ! empty( $args['whp_hide_on_blog_page'] ) ? true : false;
-		$data['_whp_hide_on_date']             = ! empty( $args['whp_hide_on_date'] ) ? true : false;
-		$data['_whp_hide_on_post_navigation']  = ! empty( $args['whp_hide_on_post_navigation'] ) ? true : false;
-		$data['_whp_hide_on_recent_posts']     = ! empty( $args['whp_hide_on_recent_posts'] ) ? true : false;
-		$data['_whp_hide_on_archive']          = ! empty( $args['whp_hide_on_archive'] ) ? true : false;
-		$data['_whp_hide_on_cpt_archive']      = ! empty( $args['whp_hide_on_cpt_archive'] ) ? true : false;
-		$data['_whp_hide_on_rest_api']         = ! empty( $args['whp_hide_on_rest_api'] ) ? true : false;
-		$data['_whp_hide_on_single_post_page'] = ! empty( $args['whp_hide_on_single_post_page'] ) ? true : false;
+		$data['hide_on_frontpage']        = ! empty( $args['whp_hide_on_frontpage'] ) ? true : false;
+		$data['hide_on_categories']       = ! empty( $args['whp_hide_on_categories'] ) ? true : false;
+		$data['hide_on_search']           = ! empty( $args['whp_hide_on_search'] ) ? true : false;
+		$data['hide_on_tags']             = ! empty( $args['whp_hide_on_tags'] ) ? true : false;
+		$data['hide_on_authors']          = ! empty( $args['whp_hide_on_authors'] ) ? true : false;
+		$data['hide_in_rss_feed']         = ! empty( $args['whp_hide_in_rss_feed'] ) ? true : false;
+		$data['hide_on_blog_page']        = ! empty( $args['whp_hide_on_blog_page'] ) ? true : false;
+		$data['hide_on_date']             = ! empty( $args['whp_hide_on_date'] ) ? true : false;
+		$data['hide_on_post_navigation']  = ! empty( $args['whp_hide_on_post_navigation'] ) ? true : false;
+		$data['hide_on_recent_posts']     = ! empty( $args['whp_hide_on_recent_posts'] ) ? true : false;
+		$data['hide_on_archive']          = ! empty( $args['whp_hide_on_archive'] ) ? true : false;
+		$data['hide_on_cpt_archive']      = ! empty( $args['whp_hide_on_cpt_archive'] ) ? true : false;
+		$data['hide_on_rest_api']         = ! empty( $args['whp_hide_on_rest_api'] ) ? true : false;
+		$data['hide_on_single_post_page'] = ! empty( $args['whp_hide_on_single_post_page'] ) ? true : false;
 
 		if ( whp_plugin()->is_woocommerce_active() && whp_plugin()->is_woocommerce_product() ) {
-			$data['_whp_hide_on_store']            = ! empty( $args['whp_hide_on_store'] ) ? true : false;
-			$data['_whp_hide_on_product_category'] = ! empty( $args['whp_hide_on_product_category'] ) ? true : false;
+			$data['hide_on_store']            = ! empty( $args['whp_hide_on_store'] ) ? true : false;
+			$data['hide_on_product_category'] = ! empty( $args['whp_hide_on_product_category'] ) ? true : false;
 		}
 
 		// Sanitize inputs.
@@ -340,14 +342,11 @@ class Post_Hide_Metabox {
 	 */
 	private function save_meta_data( $meta_data, $post_id ) {
 		foreach ( $meta_data as $key => $value ) {
-			if ( get_post_meta( $post_id, $key, false ) ) {
-				update_post_meta( $post_id, $key, $value );
-			} else {
-				add_post_meta( $post_id, $key, $value );
-			}
-
-			if ( ! $value ) {
-				delete_post_meta( $post_id, $key );
+			$exist = whp_plugin()->get_whp_meta( $post_id, $key, true );
+			if ( $exist && ! $value ) {
+				whp_plugin()->delete_whp_meta( $post_id, $key, true );
+			} elseif ( ! $exist && $value ) {
+				whp_plugin()->add_whp_meta( $post_id, $key );
 			}
 		}
 	}

@@ -47,10 +47,11 @@ class Plugin {
 	 *
 	 * @param   string $post_type  The post type to be filtered.
 	 * @param   string $from Filter for the posts hidden on specific page.
+	 * @param   boolean $fallback Should it fallback to meta table.
 	 *
 	 * @return  array
 	 */
-	public function get_hidden_posts_ids( $post_type = 'post', $from = 'all' ) {
+	public function get_hidden_posts_ids( $post_type = 'post', $from = 'all', $fallback = false ) {
 		$cache_key = 'whp_' . $post_type . '_' . $from;
 
 		$hidden_posts = wp_cache_get( $cache_key, 'whp' );
@@ -71,15 +72,31 @@ class Plugin {
 			return array();
 		}
 
+		$key = str_replace( '_whp_', '', $key );
+
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+		$table_name = $wpdb->prefix . 'whp_posts_visibility';
+
+		$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$table_name} WHERE `condition` = %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
 
 		if ( 'all' === $key ) {
-			$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key LIKE %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+			$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$table_name} WHERE `condition` LIKE %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
 		}
 
 		$hidden_posts = $wpdb->get_col( $sql );
+
+		if ( empty( $hidden_posts ) && $fallback ) {
+			$key = '_whp_' . $key;
+
+			$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+
+			if ( 'all' === $key ) {
+				$sql = $wpdb->prepare( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key LIKE %s AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s)", $key, $post_type );
+			}
+
+			$hidden_posts = $wpdb->get_col( $sql );
+		}
 
 		wp_cache_set( $cache_key, $hidden_posts, 'whp' );
 
@@ -136,5 +153,92 @@ class Plugin {
 		}
 
 		return in_array( $current_post_type, $custom_types, true );
+	}
+
+	/**
+	 * Check if post is hidden in the custom table
+	 *
+	 * @param  int  $post_id  The post id.
+	 * @param  string  $key      The key name.
+	 * @param  boolean $fallback Should it check in the post meta table.
+	 *
+	 * @return boolean
+	 */
+	public function get_whp_meta( $post_id, $key, $fallback = false ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'whp_posts_visibility';
+
+		$hidden_post = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$table_name} WHERE post_id = %d AND `condition` = %s",
+				$post_id,
+				$key
+			)
+		);
+
+		if ( $hidden_post ) {
+			return true;
+		}
+
+		if ( $fallback ) {
+			return get_post_meta( $post_id, '_whp_' . $key, true );
+		}
+	}
+
+	/**
+	 * Set post for hiding
+	 *
+	 * @param  int    $post_id  The post id.
+	 * @param  string $key      The key name.
+	 *
+	 * @return boolean
+	 */
+	public function add_whp_meta( $post_id, $key, $fallback = false ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'whp_posts_visibility';
+
+		$wpdb->insert(
+			$table_name,
+			array(
+				'post_id' => $post_id,
+				'condition' => $key,
+			),
+			array(
+				'%d',
+				'%s',
+			)
+		);
+	}
+
+	/**
+	 * Remove post from hiding
+	 *
+	 * @param  int    $post_id  The post id.
+	 * @param  string $key      The key name.
+	 *
+	 * @return boolean
+	 */
+	public function delete_whp_meta( $post_id, $key, $fallback = false ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'whp_posts_visibility';
+
+		$wpdb->delete(
+			$table_name,
+			array(
+				'post_id' => $post_id,
+				'condition' => $key,
+			),
+			array(
+				'%d',
+				'%s',
+			)
+		);
+
+		if ( $fallback ) {
+			delete_post_meta( $post_id, '_whp_' . $key );
+		}
 	}
 }

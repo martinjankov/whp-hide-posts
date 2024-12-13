@@ -95,6 +95,8 @@ class Post_Hide {
 	 * @return void
 	 */
 	public function exclude_posts( $query ) {
+		global $wpdb;
+
 		$q_post_type = $query->get( 'post_type' );
 
 		if ( ( ! is_admin() || ( is_admin() && wp_doing_ajax() ) ) &&
@@ -104,78 +106,77 @@ class Post_Hide {
 				( is_array( $q_post_type ) && ! empty( array_intersect( $q_post_type, $this->enabled_post_types ) ) )
 			)
 		) {
+			$table_name = $wpdb->prefix . 'whp_posts_visibility';
+			// Handle single post pages
 			if ( is_singular( $q_post_type ) && ! $query->is_main_query() ) {
-				$query->set( 'meta_key', '_whp_hide_on_single_post_page' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
+				$hidden_posts = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT DISTINCT post_id FROM {$table_name} WHERE `condition` = %s",
+						'hide_on_single_post_page'
+					)
+				);
 
-			// Hide on homepage.
-			if ( ( is_front_page() && is_home() ) || is_front_page() ) {
-				$query->set( 'meta_key', '_whp_hide_on_frontpage' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
+				if ( ! empty( $hidden_posts ) ) {
+					$query->set( 'post__not_in', $hidden_posts );
+				} else {
+					// Fallback to meta
+					$query->set( 'meta_key', '_whp_hide_on_single_post_page' );
+					$query->set( 'meta_compare', 'NOT EXISTS' );
+				}
+			} elseif ( ( is_front_page() && is_home() ) || is_front_page() ) {
+				$this->exclude_by_condition( $query, 'hide_on_frontpage', '_whp_hide_on_frontpage' );
 			} elseif ( is_home() ) {
-				// Hide on static blog page.
-				$query->set( 'meta_key', '_whp_hide_on_blog_page' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
+				$this->exclude_by_condition( $query, 'hide_on_blog_page', '_whp_hide_on_blog_page' );
+			} elseif ( is_post_type_archive( $q_post_type ) ) {
+				$this->exclude_by_condition( $query, 'hide_on_cpt_archive', '_whp_hide_on_cpt_archive' );
+			} elseif ( is_category( $q_post_type ) ) {
+				$this->exclude_by_condition( $query, 'hide_on_categories', '_whp_hide_on_categories' );
+			} elseif ( is_tag() ) {
+				$this->exclude_by_condition( $query, 'hide_on_tags', '_whp_hide_on_tags' );
+			} elseif ( is_author() ) {
+				$this->exclude_by_condition( $query, 'hide_on_authors', '_whp_hide_on_authors' );
+			} elseif ( is_date() ) {
+				$this->exclude_by_condition( $query, 'hide_on_date', '_whp_hide_on_date' );
+			} elseif ( is_search() ) {
+				$this->exclude_by_condition( $query, 'hide_on_search', '_whp_hide_on_search' );
+			} elseif ( is_feed() ) {
+				$this->exclude_by_condition( $query, 'hide_in_rss_feed', '_whp_hide_in_rss_feed' );
+			} elseif ( whp_plugin()->is_woocommerce_active() ) {
+				if ( is_shop() ) {
+					$this->exclude_by_condition( $query, 'hide_on_store', '_whp_hide_on_store' );
+				} elseif ( is_product_category() ) {
+					$this->exclude_by_condition( $query, 'hide_on_product_category', '_whp_hide_on_product_category' );
+				}
+			} elseif ( is_archive() ) {
+				$this->exclude_by_condition( $query, 'hide_on_archive', '_whp_hide_on_archive' );
 			}
+		}
+	}
 
-			// Hide on cpt archive.
-			if ( is_post_type_archive( $q_post_type ) ) {
-				$query->set( 'meta_key', '_whp_hide_on_cpt_archive' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			} elseif ( is_archive( $q_post_type ) ) {
-				// Hide on Archive.
-				$query->set( 'meta_key', '_whp_hide_on_archive' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
+	/**
+	 * Exclude posts by a condition using the custom table, with a fallback to post meta.
+	 *
+	 * @param WP_Query $query The query object.
+	 * @param string   $condition The condition to check in the custom table.
+	 * @param string   $meta_key The meta key to check for fallback.
+	 */
+	private function exclude_by_condition( &$query, $condition, $meta_key ) {
+		global $wpdb;
 
-			// Hide on Categories.
-			if ( is_category() ) {
-				$query->set( 'meta_key', '_whp_hide_on_categories' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
+		$table_name = $wpdb->prefix . 'whp_posts_visibility';
 
-			// Hide on Search.
-			if ( is_search() ) {
-				$query->set( 'meta_key', '_whp_hide_on_search' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
+		$hidden_posts = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT post_id FROM {$table_name} WHERE `condition` = %s",
+				$condition
+			)
+		);
 
-			// Hide on Tags.
-			if ( is_tag() ) {
-				$query->set( 'meta_key', '_whp_hide_on_tags' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide on Authors.
-			if ( is_author() ) {
-				$query->set( 'meta_key', '_whp_hide_on_authors' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide on Date.
-			if ( is_date() ) {
-				$query->set( 'meta_key', '_whp_hide_on_date' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide on RSS Feed.
-			if ( is_feed() ) {
-				$query->set( 'meta_key', '_whp_hide_in_rss_feed' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide in Store.
-			if ( whp_plugin()->is_woocommerce_active() && is_shop() ) {
-				$query->set( 'meta_key', '_whp_hide_on_store' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
-
-			// Hide on Product categories.
-			if ( whp_plugin()->is_woocommerce_active() && is_product_category() ) {
-				$query->set( 'meta_key', '_whp_hide_on_product_category' );
-				$query->set( 'meta_compare', 'NOT EXISTS' );
-			}
+		if ( ! empty( $hidden_posts ) ) {
+			$query->set( 'post__not_in', $hidden_posts );
+		} else {
+			$query->set( 'meta_key', $meta_key );
+			$query->set( 'meta_compare', 'NOT EXISTS' );
 		}
 	}
 
