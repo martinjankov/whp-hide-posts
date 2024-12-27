@@ -184,6 +184,8 @@ class Plugin {
 		if ( $fallback ) {
 			return get_post_meta( $post_id, '_whp_' . $key, true );
 		}
+
+		return false;
 	}
 
 	/**
@@ -237,8 +239,6 @@ class Plugin {
 			)
 		);
 
-		if ( $fallback ) {
-			delete_post_meta( $post_id, '_whp_' . $key );
-		}
+		delete_post_meta( $post_id, '_whp_' . $key );
 	}
 }

@@ -175,8 +175,13 @@ class Post_Hide {
 		if ( ! empty( $hidden_posts ) ) {
 			$query->set( 'post__not_in', $hidden_posts );
 		} else {
-			$query->set( 'meta_key', $meta_key );
-			$query->set( 'meta_compare', 'NOT EXISTS' );
+			$data_migrated = get_option( 'whp_data_migrated', false );
+
+			if ( ! $data_migrated ) {
+				// Fallback to meta
+				$query->set( 'meta_key', $meta_key );
+				$query->set( 'meta_compare', 'NOT EXISTS' );
+			}
 		}
 	}
 
@@ -188,7 +193,11 @@ class Post_Hide {
 	 * @return  string
 	 */
 	public function hide_from_post_navigation( $where ) {
-		$hidden_on_post_navigation = whp_plugin()->get_hidden_posts_ids( 'post', 'post_navigation' );
+		$data_migrated = get_option( 'whp_data_migrated', false );
+
+		$fallback = ! $data_migrated;
+
+		$hidden_on_post_navigation = whp_plugin()->get_hidden_posts_ids( 'post', 'post_navigation', $fallback );
 
 		if ( empty( $hidden_on_post_navigation ) ) {
 			return $where;
@@ -212,7 +221,11 @@ class Post_Hide {
 	 * @return  array
 	 */
 	public function hide_from_recent_post_widget( $query_args ) {
-		$hidden_on_recent_posts = whp_plugin()->get_hidden_posts_ids( 'post', 'recent_posts' );
+		$data_migrated = get_option( 'whp_data_migrated', false );
+
+		$fallback = ! $data_migrated;
+
+		$hidden_on_recent_posts = whp_plugin()->get_hidden_posts_ids( 'post', 'recent_posts', $fallback );
 
 		if ( empty( $hidden_on_recent_posts ) ) {
 			return $query_args;
