@@ -121,7 +121,11 @@ class Post_Hide {
 				);
 
 				if ( ! empty( $hidden_posts ) ) {
-					$query->set( 'post__not_in', $hidden_posts );
+					$existing_posts = $query->get( 'post__not_in' );
+					if ( ! is_array( $existing_posts ) ) {
+						$existing_posts = array();
+					}
+					$query->set( 'post__not_in', array_unique( array_merge( $existing_posts, $hidden_posts ) ) );
 				} else {
 					// Fallback to meta
 					$query->set( 'meta_key', '_whp_hide_on_single_post_page' );
@@ -177,7 +181,11 @@ class Post_Hide {
 		);
 
 		if ( ! empty( $hidden_posts ) ) {
-			$query->set( 'post__not_in', $hidden_posts );
+			$existing_posts = $query->get( 'post__not_in' );
+			if ( ! is_array( $existing_posts ) ) {
+				$existing_posts = array();
+			}
+			$query->set( 'post__not_in', array_unique( array_merge( $existing_posts, $hidden_posts ) ) );
 		} else {
 			$data_migrated = get_option( 'whp_data_migrated', false );
 
