@@ -1,13 +1,15 @@
 === WordPress Hide Posts ===
 Contributors: martin7ba
 Donate link: https://www.martincv.com/whp-donate
-Tags: hide posts, hide, show, visibility, hide products, rss feed, rest api
+Tags: hide posts, hide, show, visibility, hide products
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.7.1
 Requires PHP: 7.3
-Stable tag: 1.1.1
+Stable tag: 2.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
+
+Allows you to hide any posts on the home page, category page, search page, tags page, authors page, RSS Feed, REST API, Post Navigation and more.
 
 == Description ==
 
@@ -62,6 +64,18 @@ This is possible. This functionality is not free. You can contact me at [martin@
 3. Post Lists table 'Hidden on' column.
 
 == Changelog ==
+
+= 2.0.1 =
+_Release Date - 27 December 2024_
+
+- Small updates on the displaying of the flags in admin.
+
+= 2.0 =
+_Release Date - 27 December 2024_
+
+- Added custom database table to hold the hide post flags.
+- All new Hide flags on posts will be saved in the new database table. A fallback to old data is also added in case the old data is not yet migrated to the new table.
+- Added option to migrate the old data from wp_postmeta table to the new table.
 
 = 1.1.1 =
 _Release Date - 05 October 2022_

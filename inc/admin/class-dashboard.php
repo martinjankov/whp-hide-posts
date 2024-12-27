@@ -97,18 +97,22 @@ class Dashboard {
 		}
 
 		$meta_keys = [
-			'_whp_hide_on_frontpage'    => 'hide_on_frontpage',
-			'_whp_hide_on_blog_page'    => 'hide_on_blog_page',
-			'_whp_hide_on_cpt_archive'  => 'hide_on_cpt_archive',
-			'_whp_hide_on_categories'   => 'hide_on_categories',
-			'_whp_hide_on_search'       => 'hide_on_search',
-			'_whp_hide_on_tags'         => 'hide_on_tags',
-			'_whp_hide_on_authors'      => 'hide_on_authors',
-			'_whp_hide_on_date'         => 'hide_on_date',
-			'_whp_hide_in_rss_feed'     => 'hide_in_rss_feed',
-			'_whp_hide_on_store'        => 'hide_on_store',
+			'_whp_hide_on_frontpage'        => 'hide_on_frontpage',
+			'_whp_hide_on_blog_page'        => 'hide_on_blog_page',
+			'_whp_hide_on_cpt_archive'      => 'hide_on_cpt_archive',
+			'_whp_hide_on_categories'       => 'hide_on_categories',
+			'_whp_hide_on_search'           => 'hide_on_search',
+			'_whp_hide_on_tags'             => 'hide_on_tags',
+			'_whp_hide_on_authors'          => 'hide_on_authors',
+			'_whp_hide_on_date'             => 'hide_on_date',
+			'_whp_hide_in_rss_feed'         => 'hide_in_rss_feed',
+			'_whp_hide_on_store'            => 'hide_on_store',
 			'_whp_hide_on_product_category' => 'hide_on_product_category',
 			'_whp_hide_on_single_post_page' => 'hide_on_single_post_page',
+			'_whp_hide_on_post_navigation'  => 'hide_on_post_navigation',
+			'_whp_hide_on_recent_posts'     => 'hide_on_recent_posts',
+			'_whp_hide_on_archive'          => 'hide_on_archive',
+			'_whp_hide_on_rest_api'         => 'hide_on_rest_api',
 		];
 
 		foreach ( $meta_keys as $meta_key => $condition ) {

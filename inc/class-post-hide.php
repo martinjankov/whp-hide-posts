@@ -62,7 +62,11 @@ class Post_Hide {
 			return $args;
 		}
 
-		$hidden_ids = whp_plugin()->get_hidden_posts_ids( $args['post_type'], 'rest_api' );
+		$data_migrated = get_option( 'whp_data_migrated', false );
+
+		$fallback = ! $data_migrated;
+
+		$hidden_ids = whp_plugin()->get_hidden_posts_ids( $args['post_type'], 'rest_api', $fallback );
 
 		if ( ! empty( $hidden_ids ) ) {
 			$args['post__not_in'] = ! empty( $args['post__not_in'] ) ? array_unique( array_merge( $hidden_ids, $args['post__not_in'] ) ) : $hidden_ids;

@@ -10,6 +10,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 delete_option( 'whp_enabled_post_types' );
+delete_option( 'whp_db_version' );
 
 global $wpdb;
 $table_name = $wpdb->prefix . 'whp_posts_visibility';

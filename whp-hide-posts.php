@@ -4,7 +4,7 @@
  * Description: Hides posts on home page, categories, search, tags page, authors page, RSS Feed as well as hiding Woocommerce products
  * Author:      MartinCV
  * Author URI:  https://www.martincv.com
- * Version:     2.0
+ * Version:     2.0.1
  * Text Domain: whp-hide-posts
  *
  * WordPress Hide Posts is free software: you can redistribute it and/or modify
